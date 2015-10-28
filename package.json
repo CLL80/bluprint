@@ -1,0 +1,19 @@
+{
+  "name": "bluprint",
+  "version": "0.1.0",
+  "description": "CLI app for easily creating and placing boilerplate code from predefined blueprints.",
+  "main": "dist/bluprint.js",
+  "scripts": {
+    "build": "babel src --out-dir dist",
+    "watch": "babel -w src --out-dir dist",
+    "prepublish": "npm run build"
+  },
+  "author": "Tyler Martinez",
+  "license": "MIT",
+  "devDependencies": {
+    "babel": "^5.8.29"
+  },
+  "bin": {
+    "bluprint": "dist/bluprint.js"
+  },
+}
