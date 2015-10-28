@@ -1,6 +1,8 @@
 'use strict'
 
+import pathUtil from 'path';
 import mkdirp from 'mkdirp';
+import fs from 'fs';
 
 import chalk from 'chalk';
 import chip from 'chip';
@@ -9,14 +11,23 @@ import colors from 'colors';
 const log = chip();
 
 export default function generate(args) {
-  const path = args[0];
+  log('installing');
 
-  mkdirp('dummy/todos/index', (err) => {
-    log('installing');
-    if (err) {
-      log.error(chalk.red('  failure') + ` ${path}`)
-    } else {
-      log.info(chalk.green('  create') + ` ${path}`)
-    }
-  });
+  const path = args[0];
+  const directory = pathUtil.dirname(path);
+  const fileName =  path + '.js';
+
+  createDirectory(directory, createFile(fileName));
 }
+
+const createDirectory = (directory, callback) => mkdirp(directory, {}, callback);
+
+const createFile = (fileName, callback) =>
+    fs.exists(fileName, function (exists) {
+      if(exists){
+          console.log('already exists');
+      } else {
+          fs.writeFile(fileName, 'YESSSS');
+          log.info(chalk.green('  create ') + fileName);
+      }
+    });
