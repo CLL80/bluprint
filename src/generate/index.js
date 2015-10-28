@@ -13,7 +13,9 @@ const log = chip();
 export default function generate(args) {
   log('installing');
 
-  const path = args[0];
+  const blueprint = args[0];
+
+  const path = args[1];
   const destinationRoot = 'dummy/app';
   const directory = `${destinationRoot}/${pathUtil.dirname(path)}`;
   const fileName =  `${destinationRoot}/${path}.js`;

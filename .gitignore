@@ -1,2 +1,5 @@
 node_modules/
 npm-bebug.log
+
+!dummy/app/
+dummy/app/*

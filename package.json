@@ -6,7 +6,8 @@
   "scripts": {
     "build": "babel src --out-dir dist",
     "watch": "babel -w src --out-dir dist",
-    "prepublish": "npm run build"
+    "prepublish": "npm run build",
+    "clear": "find ./dummy/app/ -mindepth 1 -maxdepth 1 -type d -exec rm -rf {} +"
   },
   "author": "Tyler Martinez",
   "license": "MIT",

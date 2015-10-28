@@ -36,7 +36,9 @@ var log = (0, _chip2['default'])();
 function generate(args) {
     log('installing');
 
-    var path = args[0];
+    var blueprint = args[0];
+
+    var path = args[1];
     var destinationRoot = 'dummy/app';
     var directory = destinationRoot + '/' + _path2['default'].dirname(path);
     var fileName = destinationRoot + '/' + path + '.js';
