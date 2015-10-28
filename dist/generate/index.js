@@ -37,8 +37,9 @@ function generate(args) {
     log('installing');
 
     var path = args[0];
-    var directory = _path2['default'].dirname(path);
-    var fileName = path + '.js';
+    var destinationRoot = 'dummy/app';
+    var directory = destinationRoot + '/' + _path2['default'].dirname(path);
+    var fileName = destinationRoot + '/' + path + '.js';
 
     createDirectory(directory, createFile(fileName));
 }

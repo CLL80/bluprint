@@ -14,8 +14,9 @@ export default function generate(args) {
   log('installing');
 
   const path = args[0];
-  const directory = pathUtil.dirname(path);
-  const fileName =  path + '.js';
+  const destinationRoot = 'dummy/app';
+  const directory = `${destinationRoot}/${pathUtil.dirname(path)}`;
+  const fileName =  `${destinationRoot}/${path}.js`;
 
   createDirectory(directory, createFile(fileName));
 }
