@@ -38,8 +38,6 @@ var _colors2 = _interopRequireDefault(_colors);
 var log = (0, _chip2['default'])();
 
 function generate(args) {
-  log('installing');
-
   var blueprintName = args[0];
   var blueprintsRoot = 'dummy/blueprints';
 
@@ -48,9 +46,13 @@ function generate(args) {
   var destinationDirectory = destinationRoot + '/' + path;
   var destinationPath = destinationRoot + '/' + path;
 
+  log('installing ' + _chalk2['default'].white(path + ' ' + blueprintName));
+
   getBlueprints(blueprintsRoot, blueprintName, function (blueprints) {
     return createDirectory(destinationDirectory, function () {
-      return copyFiles(blueprints, destinationDirectory);
+      return copyFiles(blueprints, destinationDirectory, function (target) {
+        return success(target);
+      });
     });
   });
 }
@@ -78,30 +80,35 @@ var createDirectory = function createDirectory(directory, callback) {
   return (0, _mkdirp2['default'])(directory, {}, callback);
 };
 
-var copyFiles = function copyFiles(sources, targetDirectory, cb) {
+var copyFiles = function copyFiles(sources, targetDirectory, callback) {
   sources.forEach(function (source) {
     var target = _path2['default'].join(targetDirectory, _path2['default'].basename(source));
 
     var rd = _fs2['default'].createReadStream(source);
     rd.on("error", function (err) {
-      return done(err);
+      return error(err);
     });
 
     var wr = _fs2['default'].createWriteStream(target);
     wr.on("error", function (err) {
-      return done(err);
+      return error(err);
     });
     wr.on("close", function () {
-      return done();
+      return done(target);
     });
 
     rd.pipe(wr);
   });
 
-  var done = function done(err) {
-    if (err) {
-      log.error(err);
-    }
+  var error = function error(err) {
+    return log.error(err);
   };
+  var done = function done(target) {
+    return callback(target);
+  };
+};
+
+var success = function success(target) {
+  return log.info(_chalk2['default'].green('  create ') + target);
 };
 module.exports = exports['default'];
