@@ -40,32 +40,37 @@ var log = (0, _chip2['default'])();
 function generate(args) {
   log('installing');
 
-  var blueprintsRoot = 'dummy/blueprints';
   var blueprintName = args[0];
+  var blueprintsRoot = 'dummy/blueprints';
 
   var path = args[1];
   var destinationRoot = 'dummy/app';
-  var destinationDirectory = destinationRoot + '/' + _path2['default'].dirname(path);
+  var destinationDirectory = destinationRoot + '/' + path;
   var destinationPath = destinationRoot + '/' + path;
 
-  getBlueprintPath(blueprintsRoot, blueprintName, function (blueprintPath) {
+  getBlueprints(blueprintsRoot, blueprintName, function (blueprints) {
     return createDirectory(destinationDirectory, function () {
-      return copyFile(blueprintPath, destinationPath);
+      return copyFiles(blueprints, destinationDirectory);
     });
   });
 }
 
 ;
 
-var getBlueprintPath = function getBlueprintPath(root, name, callback) {
-  var blueprintFinder = (0, _findit2['default'])(root);
+var getBlueprints = function getBlueprints(root, name, callback) {
+  var blueprintFinder = (0, _findit2['default'])(_path2['default'].join(root, name));
+  var blueprints = [];
 
   blueprintFinder.on('file', function (file) {
-    var fileName = _path2['default'].parse(file).name;
+    var fileName = _path2['default'].parse(file).name;;
 
-    if (fileName === name) {
-      callback(file);
+    if (fileName !== 'config') {
+      blueprints.push(file);
     }
+  });
+
+  blueprintFinder.on('end', function () {
+    callback(blueprints);
   });
 };
 
@@ -73,23 +78,25 @@ var createDirectory = function createDirectory(directory, callback) {
   return (0, _mkdirp2['default'])(directory, {}, callback);
 };
 
-var copyFile = function copyFile(source, targetPath, cb) {
-  var target = targetPath + _path2['default'].extname(source);
+var copyFiles = function copyFiles(sources, targetDirectory, cb) {
+  sources.forEach(function (source) {
+    var target = _path2['default'].join(targetDirectory, _path2['default'].basename(source));
 
-  var rd = _fs2['default'].createReadStream(source);
-  rd.on("error", function (err) {
-    return done(err);
-  });
+    var rd = _fs2['default'].createReadStream(source);
+    rd.on("error", function (err) {
+      return done(err);
+    });
 
-  var wr = _fs2['default'].createWriteStream(target);
-  wr.on("error", function (err) {
-    return done(err);
-  });
-  wr.on("close", function () {
-    return done();
-  });
+    var wr = _fs2['default'].createWriteStream(target);
+    wr.on("error", function (err) {
+      return done(err);
+    });
+    wr.on("close", function () {
+      return done();
+    });
 
-  rd.pipe(wr);
+    rd.pipe(wr);
+  });
 
   var done = function done(err) {
     if (err) {

@@ -14,47 +14,54 @@ const log = chip();
 export default function generate(args) {
   log('installing');
 
-  const blueprintsRoot = 'dummy/blueprints';
   const blueprintName = args[0];
+  const blueprintsRoot = 'dummy/blueprints';
 
   const path = args[1];
   const destinationRoot = 'dummy/app';
-  const destinationDirectory = `${destinationRoot}/${pathUtil.dirname(path)}`;
+  const destinationDirectory = `${destinationRoot}/${path}`;
   const destinationPath = `${destinationRoot}/${path}`;
 
-  getBlueprintPath(blueprintsRoot, blueprintName, (blueprintPath) =>
+  getBlueprints(blueprintsRoot, blueprintName, (blueprints) =>
     createDirectory(destinationDirectory, () =>
-      copyFile(blueprintPath, destinationPath)
+      copyFiles(blueprints, destinationDirectory)
     )
   );
 };
 
-const getBlueprintPath = (root, name, callback) => {
-  const blueprintFinder = find(root);
+const getBlueprints= (root, name, callback) => {
+  const blueprintFinder = find(pathUtil.join(root, name));
+  var blueprints = []
 
   blueprintFinder.on('file', file => {
-    let fileName = pathUtil.parse(file).name;
+    let fileName = pathUtil.parse(file).name;;
 
-    if (fileName === name) {
-      callback(file);
+    if (fileName !== 'config') {
+      blueprints.push(file);
     }
+  });
+
+  blueprintFinder.on('end', () => {
+    callback(blueprints)
   });
 };
 
 const createDirectory = (directory, callback) =>
     mkdirp(directory, {}, callback);
 
-const copyFile = (source, targetPath, cb) => {
-  const target = targetPath + pathUtil.extname(source);
+const copyFiles = (sources, targetDirectory, cb) => {
+  sources.forEach(source => {
+    const target = pathUtil.join(targetDirectory, pathUtil.basename(source));
 
-  const rd = fs.createReadStream(source);
-  rd.on("error", err => done(err));
+    const rd = fs.createReadStream(source);
+    rd.on("error", err => done(err));
 
-  const wr = fs.createWriteStream(target);
-  wr.on("error", err => done(err));
-  wr.on("close", () => done());
+    const wr = fs.createWriteStream(target);
+    wr.on("error", err => done(err));
+    wr.on("close", () => done());
 
-  rd.pipe(wr);
+    rd.pipe(wr);
+  });
 
   const done = (err) => {
     if (err) { log.error(err); }
