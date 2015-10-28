@@ -4,6 +4,7 @@ import fs from 'fs';
 import pathUtil from 'path';
 import mkdirp from 'mkdirp';
 import find from 'findit'
+import ss from 'smart-stream';
 
 import chalk from 'chalk';
 import chip from 'chip';
@@ -24,7 +25,7 @@ export default function generate(args) {
 
   getBlueprints(blueprintsRoot, blueprintName, (blueprints) =>
     createDirectory(destinationDirectory, () =>
-      copyFiles(blueprints, destinationDirectory, (target) =>
+      copyFiles(blueprints, destinationDirectory, path, (target) =>
         success(target)
       )
     )
@@ -51,18 +52,27 @@ const getBlueprints= (root, name, callback) => {
 const createDirectory = (directory, callback) =>
     mkdirp(directory, {}, callback);
 
-const copyFiles = (sources, targetDirectory, callback) => {
+const copyFiles = (sources, targetDirectory, path, callback) => {
   sources.forEach(source => {
     const target = pathUtil.join(targetDirectory, pathUtil.basename(source));
 
-    const rd = fs.createReadStream(source);
+    const rd = fs.createReadStream(source, { encoding: 'utf8' });
     rd.on("error", err => error(err));
 
     const wr = fs.createWriteStream(target);
     wr.on("error", err => error(err));
     wr.on("close", () => done(target));
 
-    rd.pipe(wr);
+    const replaceTemplateVariables = new ss.SmartStream('ReplaceTemplateVariables');
+
+    replaceTemplateVariables.setMiddleware((data, callback) => {
+      const result = data.replace(/<% path %>/g, path.titleCase());
+      callback(null, result);
+      // NOTE: set result to undefined to prevent it from moving downstream
+    });
+
+    rd.pipe(replaceTemplateVariables)
+      .pipe(wr);
   });
 
   const error = err => log.error(err);

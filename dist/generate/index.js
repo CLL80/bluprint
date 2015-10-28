@@ -23,6 +23,10 @@ var _findit = require('findit');
 
 var _findit2 = _interopRequireDefault(_findit);
 
+var _smartStream = require('smart-stream');
+
+var _smartStream2 = _interopRequireDefault(_smartStream);
+
 var _chalk = require('chalk');
 
 var _chalk2 = _interopRequireDefault(_chalk);
@@ -50,7 +54,7 @@ function generate(args) {
 
   getBlueprints(blueprintsRoot, blueprintName, function (blueprints) {
     return createDirectory(destinationDirectory, function () {
-      return copyFiles(blueprints, destinationDirectory, function (target) {
+      return copyFiles(blueprints, destinationDirectory, path, function (target) {
         return success(target);
       });
     });
@@ -80,11 +84,11 @@ var createDirectory = function createDirectory(directory, callback) {
   return (0, _mkdirp2['default'])(directory, {}, callback);
 };
 
-var copyFiles = function copyFiles(sources, targetDirectory, callback) {
+var copyFiles = function copyFiles(sources, targetDirectory, path, callback) {
   sources.forEach(function (source) {
     var target = _path2['default'].join(targetDirectory, _path2['default'].basename(source));
 
-    var rd = _fs2['default'].createReadStream(source);
+    var rd = _fs2['default'].createReadStream(source, { encoding: 'utf8' });
     rd.on("error", function (err) {
       return error(err);
     });
@@ -97,7 +101,15 @@ var copyFiles = function copyFiles(sources, targetDirectory, callback) {
       return done(target);
     });
 
-    rd.pipe(wr);
+    var replaceTemplateVariables = new _smartStream2['default'].SmartStream('ReplaceTemplateVariables');
+
+    replaceTemplateVariables.setMiddleware(function (data, callback) {
+      var result = data.replace(/<% path %>/g, path.titleCase());
+      callback(null, result);
+      // NOTE: set result to undefined to prevent it from moving downstream
+    });
+
+    rd.pipe(replaceTemplateVariables).pipe(wr);
   });
 
   var error = function error(err) {
