@@ -1,9 +1,9 @@
 #!/usr/bin/env node
+
+
 'use strict';
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
 
 var _commander = require('commander');
 
@@ -25,15 +25,17 @@ _commander2['default'].version('0.1.0').usage('<keywords> [options]').option('-p
   return _help2['default'].print();
 }).parse(process.argv);
 
+var args = _commander2['default'].args;
+
 var anyArgs = function anyArgs() {
-  return !!_commander2['default'].args.length;
+  return !!args.length;
 };
 
 if (!anyArgs()) {
   _commander2['default'].help();
 } else {
-  if (_commander2['default'].args[0] === "generate") {
-    _generate2['default'].apply(undefined, _toConsumableArray(_lodash2['default'].drop(_commander2['default'].args)));
+  if (args[0] === "generate") {
+    (0, _generate2['default'])(_lodash2['default'].drop(args));
   } else {
     _commander2['default'].help();
   }

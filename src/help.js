@@ -1,3 +1,5 @@
+'use strict'
+
 import chalk from 'chalk';
 import chip from 'chip';
 import colors from 'colors';

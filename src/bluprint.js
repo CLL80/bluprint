@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+'use strict'
+
 import program from 'commander';
 import _ from 'lodash';
 
@@ -13,16 +15,16 @@ program
   .on('--help', () => help.print())
   .parse(process.argv);
 
-const { args, help } = program;
+const { args } = program;
 
 const anyArgs = () => !!args.length;
 
 if(!anyArgs()) {
-  help();
+  program.help();
 } else {
   if (args[0] === "generate") {
-    generate(..._.drop(args));
+    generate(_.drop(args));
   } else {
-    help();
+    program.help();
   }
 }
