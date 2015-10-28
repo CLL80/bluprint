@@ -49,9 +49,13 @@ function generate(args) {
   var destinationPath = destinationRoot + '/' + path;
 
   getBlueprintPath(blueprintsRoot, blueprintName, function (blueprintPath) {
-    return createDirectory(destinationDirectory, copyFile(blueprintPath, destinationPath));
+    return createDirectory(destinationDirectory, function () {
+      return copyFile(blueprintPath, destinationPath);
+    });
   });
 }
+
+;
 
 var getBlueprintPath = function getBlueprintPath(root, name, callback) {
   var blueprintFinder = (0, _findit2['default'])(root);
@@ -87,6 +91,10 @@ var copyFile = function copyFile(source, targetPath, cb) {
 
   rd.pipe(wr);
 
-  function done(err) {}
+  var done = function done(err) {
+    if (err) {
+      log.error(err);
+    }
+  };
 };
 module.exports = exports['default'];

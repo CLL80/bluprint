@@ -20,14 +20,14 @@ export default function generate(args) {
   const path = args[1];
   const destinationRoot = 'dummy/app';
   const destinationDirectory = `${destinationRoot}/${pathUtil.dirname(path)}`;
-  const destinationPath =  `${destinationRoot}/${path}`;
+  const destinationPath = `${destinationRoot}/${path}`;
 
   getBlueprintPath(blueprintsRoot, blueprintName, (blueprintPath) =>
-    createDirectory(destinationDirectory,
+    createDirectory(destinationDirectory, () =>
       copyFile(blueprintPath, destinationPath)
     )
   );
-}
+};
 
 const getBlueprintPath = (root, name, callback) => {
   const blueprintFinder = find(root);
@@ -39,9 +39,10 @@ const getBlueprintPath = (root, name, callback) => {
       callback(file);
     }
   });
-}
+};
 
-const createDirectory = (directory, callback) => mkdirp(directory, {}, callback);
+const createDirectory = (directory, callback) =>
+    mkdirp(directory, {}, callback);
 
 const copyFile = (source, targetPath, cb) => {
   const target = targetPath + pathUtil.extname(source);
@@ -55,7 +56,7 @@ const copyFile = (source, targetPath, cb) => {
 
   rd.pipe(wr);
 
-  function done(err) {
-
+  const done = (err) => {
+    if (err) { log.error(err); }
   }
-}
+};
