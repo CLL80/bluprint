@@ -16,4 +16,10 @@
   "bin": {
     "bluprint": "dist/bluprint.js"
   },
+  "dependencies": {
+    "chalk": "^1.1.1",
+    "chip": "0.0.5",
+    "colors": "^1.1.2",
+    "commander": "^2.9.0"
+  }
 }
