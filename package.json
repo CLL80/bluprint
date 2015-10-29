@@ -2,7 +2,7 @@
   "name": "bluprint",
   "version": "0.1.0",
   "description": "CLI app for easily creating and placing boilerplate code from predefined blueprints.",
-  "main": "dist/bluprint.js",
+  "main": "dist/index.js",
   "scripts": {
     "build": "babel src --out-dir dist",
     "watch": "babel -w src --out-dir dist",
@@ -15,7 +15,7 @@
     "babel": "^5.8.29"
   },
   "bin": {
-    "bluprint": "dist/bluprint.js"
+    "bluprint": "dist/index.js"
   },
   "dependencies": {
     "chalk": "^1.1.1",
