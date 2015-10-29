@@ -5,11 +5,12 @@ import path from 'path';
 import mkdirp from 'mkdirp';
 import find from 'findit'
 import ss from 'smart-stream';
-import inflection from 'inflection';
 
 import chalk from 'chalk';
 import chip from 'chip';
 import colors from 'colors';
+
+import replaceTemplateVariables from './tasks/replace-template-variables';
 
 const log = chip();
 
@@ -42,7 +43,7 @@ export default function generate(args, usePods) {
 
   // First argument is the type of blueprint we're generating
   const __blueprintType__ = args[0];
-  const __blueprintTypePlur__ = inflection.pluralize(__blueprintType__)
+  const __blueprintTypePlur__ = __blueprintType__.plural()
 
   // If using types layout the second argument is the template name
   // Is using pods layout the second argument is the target directory
@@ -111,10 +112,10 @@ const copyFiles = (blueprints, __destinationDirectory__, __templateDirectory__, 
     wr.on("close", () => done(target));
 
     const handleTemplateVariables = new ss.SmartStream('ReplaceTemplateVariables');
-    const __PATH_VARIABLE__ = __templateName__ ? path.parse(fileName).name : __templateDirectory__;
+    const __TEMPLATE_TOKEN__ = __templateName__ ? path.parse(fileName).name : __templateDirectory__;
 
     handleTemplateVariables.setMiddleware((data, callback) =>
-      replaceTemplateVariables(data, __PATH_VARIABLE__, callback)
+      replaceTemplateVariables(data, __TEMPLATE_TOKEN__, callback)
     );
 
     rd.pipe(handleTemplateVariables)
@@ -124,15 +125,5 @@ const copyFiles = (blueprints, __destinationDirectory__, __templateDirectory__, 
   const error = err => log.error(err);
   const done = target => callback(target);
 };
-
-const replaceTemplateVariables = (data, __PATH_VARIABLE__, callback) => {
-  // Template variables to replace
-  const result = data.replace(/<% PATH %>/g, __PATH_VARIABLE__)
-                     .replace(/<% PATH_CAMEL_CASE %>/g, __PATH_VARIABLE__.camelize())
-                     .replace(/<% PATH_TITLE_CASE %>/g, __PATH_VARIABLE__.titleCase());
-
-  // NOTE: set result to undefined to prevent it from moving downstream
-  callback(null, result);
-}
 
 const success = (target) => log.info(chalk.green('  create ') + target);

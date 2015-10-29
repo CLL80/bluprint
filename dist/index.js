@@ -17,6 +17,10 @@ var _lodash = require('lodash');
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
+var _inflection = require('inflection');
+
+var _inflection2 = _interopRequireDefault(_inflection);
+
 var _help = require('./help');
 
 var _help2 = _interopRequireDefault(_help);
@@ -36,10 +40,22 @@ String.prototype.camelize = function () {
   }).split(_path2['default'].sep).join("");
 };
 
+String.prototype.uppercase = function () {
+  return this.toUpperCase();
+};
+
 String.prototype.titleCase = function () {
   return this.camelize().replace(/(^|\/)([a-z])/g, function (match) {
     return match.toUpperCase();
   });
+};
+
+String.prototype.plural = function () {
+  return _inflection2['default'].pluralize(this);
+};
+
+String.prototype.singular = function () {
+  return _inflection2['default'].singularize(this);
 };
 
 _commander2['default'].version('0.1.0').usage('<keywords> [options]').option('-p, --pod [pods flag]', 'Generates using the defined pods based file structure').option('--pods [pods flag alias]', 'Generates using the defined pods based file structure').on('--help', function () {

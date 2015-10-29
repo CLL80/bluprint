@@ -27,10 +27,6 @@ var _smartStream = require('smart-stream');
 
 var _smartStream2 = _interopRequireDefault(_smartStream);
 
-var _inflection = require('inflection');
-
-var _inflection2 = _interopRequireDefault(_inflection);
-
 var _chalk = require('chalk');
 
 var _chalk2 = _interopRequireDefault(_chalk);
@@ -42,6 +38,10 @@ var _chip2 = _interopRequireDefault(_chip);
 var _colors = require('colors');
 
 var _colors2 = _interopRequireDefault(_colors);
+
+var _tasksReplaceTemplateVariables = require('./tasks/replace-template-variables');
+
+var _tasksReplaceTemplateVariables2 = _interopRequireDefault(_tasksReplaceTemplateVariables);
 
 var log = (0, _chip2['default'])();
 
@@ -74,7 +74,7 @@ function generate(args, usePods) {
 
   // First argument is the type of blueprint we're generating
   var __blueprintType__ = args[0];
-  var __blueprintTypePlur__ = _inflection2['default'].pluralize(__blueprintType__);
+  var __blueprintTypePlur__ = __blueprintType__.plural();
 
   // If using types layout the second argument is the template name
   // Is using pods layout the second argument is the target directory
@@ -145,10 +145,10 @@ var copyFiles = function copyFiles(blueprints, __destinationDirectory__, __templ
     });
 
     var handleTemplateVariables = new _smartStream2['default'].SmartStream('ReplaceTemplateVariables');
-    var __PATH_VARIABLE__ = __templateName__ ? _path2['default'].parse(fileName).name : __templateDirectory__;
+    var __TEMPLATE_TOKEN__ = __templateName__ ? _path2['default'].parse(fileName).name : __templateDirectory__;
 
     handleTemplateVariables.setMiddleware(function (data, callback) {
-      return replaceTemplateVariables(data, __PATH_VARIABLE__, callback);
+      return (0, _tasksReplaceTemplateVariables2['default'])(data, __TEMPLATE_TOKEN__, callback);
     });
 
     rd.pipe(handleTemplateVariables).pipe(wr);
@@ -160,14 +160,6 @@ var copyFiles = function copyFiles(blueprints, __destinationDirectory__, __templ
   var done = function done(target) {
     return callback(target);
   };
-};
-
-var replaceTemplateVariables = function replaceTemplateVariables(data, __PATH_VARIABLE__, callback) {
-  // Template variables to replace
-  var result = data.replace(/<% PATH %>/g, __PATH_VARIABLE__).replace(/<% PATH_CAMEL_CASE %>/g, __PATH_VARIABLE__.camelize()).replace(/<% PATH_TITLE_CASE %>/g, __PATH_VARIABLE__.titleCase());
-
-  // NOTE: set result to undefined to prevent it from moving downstream
-  callback(null, result);
 };
 
 var success = function success(target) {

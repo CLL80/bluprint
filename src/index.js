@@ -5,6 +5,7 @@
 import program from 'commander';
 import path from 'path';
 import _ from 'lodash';
+import inflection from 'inflection';
 
 import help from './help';
 import generate from './generate';
@@ -20,8 +21,20 @@ String.prototype.camelize = function() {
   }).split(path.sep).join("");
 };
 
+String.prototype.uppercase = function() {
+    return this.toUpperCase();
+};
+
 String.prototype.titleCase = function() {
   return this.camelize().replace(/(^|\/)([a-z])/g, (match) => match.toUpperCase());
+};
+
+String.prototype.plural = function() {
+  return inflection.pluralize(this);
+};
+
+String.prototype.singular = function() {
+  return inflection.singularize(this);
 };
 
 program
