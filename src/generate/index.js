@@ -61,7 +61,10 @@ export default function generate(args, usePods) {
       path.join(__destinationRoot__, __templateDirectory__, __blueprintTypePlur__) :
       path.join(__destinationRoot__, __templateDirectory__);
 
-  log('installing ' + chalk.white(`${__templateDirectory__} ${__blueprintType__}`));
+  const __logPath__ = usePods && __templateName__ ?
+      `${__templateDirectory__} ${ __templateName__}` :
+      __templateName__ || __templateDirectory__;
+  log('installing ' + chalk.white(`${__blueprintType__} ${__logPath__}`));
 
   // Task flow
   getBlueprints(__blueprintRoot__, __blueprintType__, (blueprints) =>
@@ -73,7 +76,7 @@ export default function generate(args, usePods) {
   );
 };
 
-const getBlueprints= (__blueprintRoot__, __blueprintType__, callback) => {
+const getBlueprints = (__blueprintRoot__, __blueprintType__, callback) => {
   const blueprintFinder = find(path.join(__blueprintRoot__, __blueprintType__));
   var blueprints = []
 

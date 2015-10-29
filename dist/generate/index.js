@@ -90,7 +90,8 @@ function generate(args, usePods) {
   // folder name in the structure
   var __destinationDirectory__ = usePods && __templateName__ ? _path2['default'].join(__destinationRoot__, __templateDirectory__, __blueprintTypePlur__) : _path2['default'].join(__destinationRoot__, __templateDirectory__);
 
-  log('installing ' + _chalk2['default'].white(__templateDirectory__ + ' ' + __blueprintType__));
+  var __logPath__ = usePods && __templateName__ ? __templateDirectory__ + ' ' + __templateName__ : __templateName__ || __templateDirectory__;
+  log('installing ' + _chalk2['default'].white(__blueprintType__ + ' ' + __logPath__));
 
   // Task flow
   getBlueprints(__blueprintRoot__, __blueprintType__, function (blueprints) {
