@@ -13,32 +13,70 @@ import colors from 'colors';
 
 const log = chip();
 
+// Some example commands
+//
+// bluprint generate [component] [TodosList]
+// The first argument is __blueprintType__
+// The second argument is __templateName__
+// The output is  __root__/__bluePrintTypePlur__/__templateName__
+// or             __root__/components/TodosList
+//
+// bluprint generate [component] [todos/list] --pod
+// The first argument is __blueprintType__
+// The second argument is __templateDirectory__
+// The output is  __root__/__podsRoot__/__templateDirectory__/__blueprintType__
+// or             __root__/__podsRoot__/todos/list/component
+//
+// bluprint generate [component] [todos] [List] --pod
+// The first argument is __blueprintType__
+// The second argument is __templateDirectory__
+// The third argument is __templateName__
+// The output is  __root__/__podsRoot__/__templateDirectory__/__blueprintTypePlur__/__templateName__
+// or             __root__/__podsRoot__/todos/components/List
+//
+
 export default function generate(args) {
-  const blueprintName = args[0];
-  const blueprintsRoot = 'dummy/blueprints';
+  const usePods = true; // Temp
 
-  const path = args[1];
-  const template = args[2];
+  // Needs to be defined via config
+  const __destinationRoot__ = 'dummy/app';
+  const __blueprintRoot__ = 'dummy/blueprints';
 
-  const destinationRoot = 'dummy/app';
-  const destinationDirectory = template ?
-      `${destinationRoot}/${path}/${inflection.pluralize(blueprintName)}` :
-      `${destinationRoot}/${path}`;
-  const destinationPath = `${destinationRoot}/${path}`;
+  // First argument is the type of blueprint we're generating
+  const __blueprintType__ = args[0];
+  const __blueprintTypePlur__ = inflection.pluralize(__blueprintType__)
 
-  log('installing ' + chalk.white(`${path} ${blueprintName}`));
+  // If using types layout the second argument is the template name
+  // Is using pods layout the second argument is the target directory
 
-  getBlueprints(blueprintsRoot, blueprintName, (blueprints) =>
-    createDirectory(destinationDirectory, template, () =>
-      copyFiles(blueprints, destinationDirectory, path, template, (target) =>
+  // If using pods we accept template name as the third arguments
+  // This allows us to create typed folders inside pods directories
+  // i.e. todos/components
+  const __templateName__ = usePods ? args[2] : args[1];
+  const __templateDirectory__ = usePods ? args[1] : __blueprintTypePlur__;
+
+
+  // Construct the destination directory
+  // If using pods and supplied a template name we must include the typed
+  // folder name in the structure
+  const __destinationDirectory__ = usePods && __templateName__ ?
+      pathUtil.join(__destinationRoot__, __templateDirectory__, __blueprintTypePlur__) :
+      pathUtil.join(__destinationRoot__, __templateDirectory__);
+
+  log('installing ' + chalk.white(`${__templateDirectory__} ${__blueprintType__}`));
+
+  // Task flow
+  getBlueprints(__blueprintRoot__, __blueprintType__, (blueprints) =>
+    createDirectory(__destinationDirectory__, () =>
+      copyFiles(blueprints, __destinationDirectory__, __templateDirectory__, __templateName__, (target) =>
         success(target)
       )
     )
   );
 };
 
-const getBlueprints= (root, name, callback) => {
-  const blueprintFinder = find(pathUtil.join(root, name));
+const getBlueprints= (__root__, name, callback) => {
+  const blueprintFinder = find(pathUtil.join(__root__, name));
   var blueprints = []
 
   blueprintFinder.on('file', file => {
@@ -54,15 +92,15 @@ const getBlueprints= (root, name, callback) => {
   });
 };
 
-const createDirectory = (directory, template, callback) =>
-    mkdirp(directory, {}, callback);
+const createDirectory = (__directory__,  callback) =>
+    mkdirp(__directory__, {}, callback);
 
-const copyFiles = (sources, targetDirectory, path, template, callback) => {
+const copyFiles = (sources, __destinationDirectory__, __targetDirectory__, __templateName__, callback) => {
   sources.forEach(source => {
-    const fileName = template ?
-        template + pathUtil.extname(source) :
+    const fileName = __templateName__ ?
+        __templateName__ + pathUtil.extname(source) :
         pathUtil.basename(source);
-    const target = pathUtil.join(targetDirectory, fileName);
+    const target = pathUtil.join(__destinationDirectory__, fileName);
 
     const rd = fs.createReadStream(source, { encoding: 'utf8' });
     rd.on("error", err => error(err));
@@ -72,7 +110,7 @@ const copyFiles = (sources, targetDirectory, path, template, callback) => {
     wr.on("close", () => done(target));
 
     const handleTemplateVariables = new ss.SmartStream('ReplaceTemplateVariables');
-    const __PATH__ = template ? path + pathUtil.parse(fileName).name.capitalize() : path;
+    const __PATH__ = __templateName__ ? pathUtil.parse(fileName).name : __targetDirectory__;
 
     handleTemplateVariables.setMiddleware((data, callback) =>
       replaceTemplateVariables(data, __PATH__, callback)

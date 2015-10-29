@@ -45,22 +45,59 @@ var _colors2 = _interopRequireDefault(_colors);
 
 var log = (0, _chip2['default'])();
 
+// Some example commands
+//
+// bluprint generate [component] [TodosList]
+// The first argument is __blueprintType__
+// The second argument is __templateName__
+// The output is  __root__/__bluePrintTypePlur__/__templateName__
+// or             __root__/components/TodosList
+//
+// bluprint generate [component] [todos/list] --pod
+// The first argument is __blueprintType__
+// The second argument is __templateDirectory__
+// The output is  __root__/__podsRoot__/__templateDirectory__/__blueprintType__
+// or             __root__/__podsRoot__/todos/list/component
+//
+// bluprint generate [component] [todos] [List] --pod
+// The first argument is __blueprintType__
+// The second argument is __templateDirectory__
+// The third argument is __templateName__
+// The output is  __root__/__podsRoot__/__templateDirectory__/__blueprintTypePlur__/__templateName__
+// or             __root__/__podsRoot__/todos/components/List
+//
+
 function generate(args) {
-  var blueprintName = args[0];
-  var blueprintsRoot = 'dummy/blueprints';
+  var usePods = true; // Temp
 
-  var path = args[1];
-  var template = args[2];
+  // Needs to be defined via config
+  var __destinationRoot__ = 'dummy/app';
+  var __blueprintRoot__ = 'dummy/blueprints';
 
-  var destinationRoot = 'dummy/app';
-  var destinationDirectory = template ? destinationRoot + '/' + path + '/' + _inflection2['default'].pluralize(blueprintName) : destinationRoot + '/' + path;
-  var destinationPath = destinationRoot + '/' + path;
+  // First argument is the type of blueprint we're generating
+  var __blueprintType__ = args[0];
+  var __blueprintTypePlur__ = _inflection2['default'].pluralize(__blueprintType__);
 
-  log('installing ' + _chalk2['default'].white(path + ' ' + blueprintName));
+  // If using types layout the second argument is the template name
+  // Is using pods layout the second argument is the target directory
 
-  getBlueprints(blueprintsRoot, blueprintName, function (blueprints) {
-    return createDirectory(destinationDirectory, template, function () {
-      return copyFiles(blueprints, destinationDirectory, path, template, function (target) {
+  // If using pods we accept template name as the third arguments
+  // This allows us to create typed folders inside pods directories
+  // i.e. todos/components
+  var __templateName__ = usePods ? args[2] : args[1];
+  var __templateDirectory__ = usePods ? args[1] : __blueprintTypePlur__;
+
+  // Construct the destination directory
+  // If using pods and supplied a template name we must include the typed
+  // folder name in the structure
+  var __destinationDirectory__ = usePods && __templateName__ ? _path2['default'].join(__destinationRoot__, __templateDirectory__, __blueprintTypePlur__) : _path2['default'].join(__destinationRoot__, __templateDirectory__);
+
+  log('installing ' + _chalk2['default'].white(__templateDirectory__ + ' ' + __blueprintType__));
+
+  // Task flow
+  getBlueprints(__blueprintRoot__, __blueprintType__, function (blueprints) {
+    return createDirectory(__destinationDirectory__, function () {
+      return copyFiles(blueprints, __destinationDirectory__, __templateDirectory__, __templateName__, function (target) {
         return success(target);
       });
     });
@@ -69,8 +106,8 @@ function generate(args) {
 
 ;
 
-var getBlueprints = function getBlueprints(root, name, callback) {
-  var blueprintFinder = (0, _findit2['default'])(_path2['default'].join(root, name));
+var getBlueprints = function getBlueprints(__root__, name, callback) {
+  var blueprintFinder = (0, _findit2['default'])(_path2['default'].join(__root__, name));
   var blueprints = [];
 
   blueprintFinder.on('file', function (file) {
@@ -86,14 +123,14 @@ var getBlueprints = function getBlueprints(root, name, callback) {
   });
 };
 
-var createDirectory = function createDirectory(directory, template, callback) {
-  return (0, _mkdirp2['default'])(directory, {}, callback);
+var createDirectory = function createDirectory(__directory__, callback) {
+  return (0, _mkdirp2['default'])(__directory__, {}, callback);
 };
 
-var copyFiles = function copyFiles(sources, targetDirectory, path, template, callback) {
+var copyFiles = function copyFiles(sources, __destinationDirectory__, __targetDirectory__, __templateName__, callback) {
   sources.forEach(function (source) {
-    var fileName = template ? template + _path2['default'].extname(source) : _path2['default'].basename(source);
-    var target = _path2['default'].join(targetDirectory, fileName);
+    var fileName = __templateName__ ? __templateName__ + _path2['default'].extname(source) : _path2['default'].basename(source);
+    var target = _path2['default'].join(__destinationDirectory__, fileName);
 
     var rd = _fs2['default'].createReadStream(source, { encoding: 'utf8' });
     rd.on("error", function (err) {
@@ -109,7 +146,7 @@ var copyFiles = function copyFiles(sources, targetDirectory, path, template, cal
     });
 
     var handleTemplateVariables = new _smartStream2['default'].SmartStream('ReplaceTemplateVariables');
-    var __PATH__ = template ? path + _path2['default'].parse(fileName).name.capitalize() : path;
+    var __PATH__ = __templateName__ ? _path2['default'].parse(fileName).name : __targetDirectory__;
 
     handleTemplateVariables.setMiddleware(function (data, callback) {
       return replaceTemplateVariables(data, __PATH__, callback);
