@@ -63,20 +63,27 @@ const copyFiles = (sources, targetDirectory, path, callback) => {
     wr.on("error", err => error(err));
     wr.on("close", () => done(target));
 
-    const replaceTemplateVariables = new ss.SmartStream('ReplaceTemplateVariables');
+    const handleTemplateVariables = new ss.SmartStream('ReplaceTemplateVariables');
 
-    replaceTemplateVariables.setMiddleware((data, callback) => {
-      const result = data.replace(/<% path %>/g, path.titleCase());
-      callback(null, result);
-      // NOTE: set result to undefined to prevent it from moving downstream
-    });
+    handleTemplateVariables.setMiddleware((data, callback) =>
+      replaceTemplateVariables(data, path, callback)
+    );
 
-    rd.pipe(replaceTemplateVariables)
+    rd.pipe(handleTemplateVariables)
       .pipe(wr);
   });
 
   const error = err => log.error(err);
   const done = target => callback(target);
 };
+
+const replaceTemplateVariables = (data, path, callback) => {
+  const result = data.replace(/<% PATH %>/g, path)
+                     .replace(/<% PATH_CAMEL_CASE %>/g, path.camelize())
+                     .replace(/<% PATH_TITLE_CASE %>/g, path.titleCase());
+
+  callback(null, result);
+  // NOTE: set result to undefined to prevent it from moving downstream
+}
 
 const success = (target) => log.info(chalk.green('  create ') + target);

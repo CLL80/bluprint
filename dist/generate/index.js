@@ -101,15 +101,13 @@ var copyFiles = function copyFiles(sources, targetDirectory, path, callback) {
       return done(target);
     });
 
-    var replaceTemplateVariables = new _smartStream2['default'].SmartStream('ReplaceTemplateVariables');
+    var handleTemplateVariables = new _smartStream2['default'].SmartStream('ReplaceTemplateVariables');
 
-    replaceTemplateVariables.setMiddleware(function (data, callback) {
-      var result = data.replace(/<% path %>/g, path.titleCase());
-      callback(null, result);
-      // NOTE: set result to undefined to prevent it from moving downstream
+    handleTemplateVariables.setMiddleware(function (data, callback) {
+      return replaceTemplateVariables(data, path, callback);
     });
 
-    rd.pipe(replaceTemplateVariables).pipe(wr);
+    rd.pipe(handleTemplateVariables).pipe(wr);
   });
 
   var error = function error(err) {
@@ -118,6 +116,13 @@ var copyFiles = function copyFiles(sources, targetDirectory, path, callback) {
   var done = function done(target) {
     return callback(target);
   };
+};
+
+var replaceTemplateVariables = function replaceTemplateVariables(data, path, callback) {
+  var result = data.replace(/<% PATH %>/g, path).replace(/<% PATH_CAMEL_CASE %>/g, path.camelize()).replace(/<% PATH_TITLE_CASE %>/g, path.titleCase());
+
+  callback(null, result);
+  // NOTE: set result to undefined to prevent it from moving downstream
 };
 
 var success = function success(target) {

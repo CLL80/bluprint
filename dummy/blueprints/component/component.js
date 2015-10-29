@@ -8,7 +8,7 @@ import {
 
 import shouldPureComponentUpdate from 'react-pure-render/function'
 
-export default class AddNewButton extends Component {
+export default class <% path %> extends Component {
   shouldComponentUpdate = shouldPureComponentUpdate;
 
   render() {
@@ -19,6 +19,6 @@ export default class AddNewButton extends Component {
   }
 }
 
-AddNewButton.propTypes = {
+<% path %>.propTypes = {
 
 };

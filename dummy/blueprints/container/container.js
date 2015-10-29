@@ -23,4 +23,4 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps,
   mergeProps
-)(<% path %>Component);
+)(<% PATH_TITLE_CASE %>Component);
