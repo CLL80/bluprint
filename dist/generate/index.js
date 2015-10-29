@@ -145,10 +145,10 @@ var copyFiles = function copyFiles(blueprints, __destinationDirectory__, __templ
     });
 
     var handleTemplateVariables = new _smartStream2['default'].SmartStream('ReplaceTemplateVariables');
-    var __TEMPLATE_TOKEN__ = __templateName__ ? _path2['default'].parse(fileName).name : __templateDirectory__;
+    var __templateToken__ = __templateName__ ? _path2['default'].parse(fileName).name : __templateDirectory__;
 
     handleTemplateVariables.setMiddleware(function (data, callback) {
-      return (0, _tasksReplaceTemplateVariables2['default'])(data, __TEMPLATE_TOKEN__, callback);
+      return (0, _tasksReplaceTemplateVariables2['default'])(data, __templateToken__, callback);
     });
 
     rd.pipe(handleTemplateVariables).pipe(wr);

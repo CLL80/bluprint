@@ -112,10 +112,10 @@ const copyFiles = (blueprints, __destinationDirectory__, __templateDirectory__, 
     wr.on("close", () => done(target));
 
     const handleTemplateVariables = new ss.SmartStream('ReplaceTemplateVariables');
-    const __TEMPLATE_TOKEN__ = __templateName__ ? path.parse(fileName).name : __templateDirectory__;
+    const __templateToken__ = __templateName__ ? path.parse(fileName).name : __templateDirectory__;
 
     handleTemplateVariables.setMiddleware((data, callback) =>
-      replaceTemplateVariables(data, __TEMPLATE_TOKEN__, callback)
+      replaceTemplateVariables(data, __templateToken__, callback)
     );
 
     rd.pipe(handleTemplateVariables)

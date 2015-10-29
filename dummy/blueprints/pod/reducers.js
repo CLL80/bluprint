@@ -6,13 +6,13 @@ import shortid from 'shortid'
 import { actionTypes } from './constants'
 
 const {
-  ADD_<% TEMPLATE_NAME singular uppercase %>,
-  UPDATE_<% TEMPLATE_NAME singular uppercase %>,
-  DELETE_<% TEMPLATE_NAME singular uppercase %>,
+  ADD_<% TEMPLATE_TOKEN singular uppercase %>,
+  UPDATE_<% TEMPLATE_TOKEN singular uppercase %>,
+  DELETE_<% TEMPLATE_TOKEN singular uppercase %>,
 } = actionTypes;
 
 
-const <% TEMPLATE_NAME %>Reducer = combineReducers({
+const <% TEMPLATE_TOKEN %>Reducer = combineReducers({
   entities: entitiesReducer,
   condition: conditionReducer
 });
@@ -20,14 +20,14 @@ const <% TEMPLATE_NAME %>Reducer = combineReducers({
 function entitiesReducer(state={}, action) {
   switch (action.type) {
 
-  case ADD_<% TEMPLATE_NAME singular uppercase %>:
-    return add<% TEMPLATE_NAME singular capitalize %>(state, action.params);
+  case ADD_<% TEMPLATE_TOKEN singular uppercase %>:
+    return add<% TEMPLATE_TOKEN singular capitalize %>(state, action.params);
 
-  case UPDATE_<% TEMPLATE_NAME singular uppercase %>:
-    return update<% TEMPLATE_NAME singular capitalize %>(state, action.id, action.params);
+  case UPDATE_<% TEMPLATE_TOKEN singular uppercase %>:
+    return update<% TEMPLATE_TOKEN singular capitalize %>(state, action.id, action.params);
 
-  case DELETE_<% TEMPLATE_NAME singular uppercase %>:
-    return delete<% TEMPLATE_NAME singular capitalize %>(state, action.id);
+  case DELETE_<% TEMPLATE_TOKEN singular uppercase %>:
+    return delete<% TEMPLATE_TOKEN singular capitalize %>(state, action.id);
   }
 
   return state;
@@ -40,7 +40,7 @@ function conditionReducer(state={}, action) {
   return state;
 }
 
-function add<% TEMPLATE_NAME singular capitalize %>(state, params) {
+function add<% TEMPLATE_TOKEN singular capitalize %>(state, params) {
   const id =shortid.generate();
 
   return {
@@ -52,20 +52,20 @@ function add<% TEMPLATE_NAME singular capitalize %>(state, params) {
   };
 }
 
-function update<% TEMPLATE_NAME singular capitalize %>(state, id, params) {
-  return _.mapValues(state, <% TEMPLATE_NAME singular %> =>
-    <% TEMPLATE_NAME singular %>.id === id ?
-    Object.assign({}, <% TEMPLATE_NAME singular %>, {
+function update<% TEMPLATE_TOKEN singular capitalize %>(state, id, params) {
+  return _.mapValues(state, <% TEMPLATE_TOKEN singular %> =>
+    <% TEMPLATE_TOKEN singular %>.id === id ?
+    Object.assign({}, <% TEMPLATE_TOKEN singular %>, {
       params
     }) :
-    <% TEMPLATE_NAME singular %>
+    <% TEMPLATE_TOKEN singular %>
   );
 }
 
-function delete<% TEMPLATE_NAME singular capitalize %>(state, id) {
-  return _.pick(state, <% TEMPLATE_NAME singular %> =>
-    <% TEMPLATE_NAME singular %>.id !== id
+function delete<% TEMPLATE_TOKEN singular capitalize %>(state, id) {
+  return _.pick(state, <% TEMPLATE_TOKEN singular %> =>
+    <% TEMPLATE_TOKEN singular %>.id !== id
   );
 }
 
-export default <% TEMPLATE_NAME %>Reducer;
+export default <% TEMPLATE_TOKEN %>Reducer;

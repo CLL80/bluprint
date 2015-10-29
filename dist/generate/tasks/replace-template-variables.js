@@ -11,7 +11,7 @@ var _lodash = require('lodash');
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
-function replaceTemplateVariables(data, __TEMPLATE_TOKEN__, callback) {
+function replaceTemplateVariables(data, __templateToken__, callback) {
   var result = data;
 
   var templateVariables = _lodash2['default'].uniq(data.match(/<%[^>]*%>/g).map(function (variable) {
@@ -20,7 +20,7 @@ function replaceTemplateVariables(data, __TEMPLATE_TOKEN__, callback) {
 
   templateVariables.forEach(function (variable) {
     var args = variable.split(/\s+/);
-    var token = __TEMPLATE_TOKEN__; // should use args[0] to determine
+    var token = __templateToken__; // should use args[0] to determine
     var mutations = _lodash2['default'].drop(args);
 
     mutations.forEach(function (mutation) {

@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-export default function replaceTemplateVariables(data, __TEMPLATE_TOKEN__, callback) {
+export default function replaceTemplateVariables(data, __templateToken__, callback) {
   var result = data;
 
   const templateVariables = _.uniq(data.match(/<%[^>]*%>/g).map(variable =>
@@ -9,7 +9,7 @@ export default function replaceTemplateVariables(data, __TEMPLATE_TOKEN__, callb
 
   templateVariables.forEach(variable => {
     let args = variable.split(/\s+/);
-    let token = __TEMPLATE_TOKEN__; // should use args[0] to determine
+    let token = __templateToken__; // should use args[0] to determine
     let mutations = _.drop(args);
 
     mutations.forEach(mutation => {
