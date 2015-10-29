@@ -9,6 +9,10 @@ import _ from 'lodash';
 import help from './help';
 import generate from './generate';
 
+String.prototype.capitalize = function() {
+    return this.charAt(0).toUpperCase() + this.slice(1);
+};
+
 String.prototype.camelize = function() {
   return this.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, (match, index) => {
     if (+match === 0) return ""; // or if (/\s+/.test(match)) for white spaces
@@ -18,7 +22,7 @@ String.prototype.camelize = function() {
 
 String.prototype.titleCase = function() {
   return this.camelize().replace(/(^|\/)([a-z])/g, (match) => match.toUpperCase());
-}
+};
 
 program
   .version('0.1.0')

@@ -5,6 +5,7 @@ import pathUtil from 'path';
 import mkdirp from 'mkdirp';
 import find from 'findit'
 import ss from 'smart-stream';
+import inflection from 'inflection';
 
 import chalk from 'chalk';
 import chip from 'chip';
@@ -17,15 +18,19 @@ export default function generate(args) {
   const blueprintsRoot = 'dummy/blueprints';
 
   const path = args[1];
+  const template = args[2];
+
   const destinationRoot = 'dummy/app';
-  const destinationDirectory = `${destinationRoot}/${path}`;
+  const destinationDirectory = template ?
+      `${destinationRoot}/${path}/${inflection.pluralize(blueprintName)}` :
+      `${destinationRoot}/${path}`;
   const destinationPath = `${destinationRoot}/${path}`;
 
   log('installing ' + chalk.white(`${path} ${blueprintName}`));
 
   getBlueprints(blueprintsRoot, blueprintName, (blueprints) =>
-    createDirectory(destinationDirectory, () =>
-      copyFiles(blueprints, destinationDirectory, path, (target) =>
+    createDirectory(destinationDirectory, template, () =>
+      copyFiles(blueprints, destinationDirectory, path, template, (target) =>
         success(target)
       )
     )
@@ -37,7 +42,7 @@ const getBlueprints= (root, name, callback) => {
   var blueprints = []
 
   blueprintFinder.on('file', file => {
-    let fileName = pathUtil.parse(file).name;;
+    let fileName = pathUtil.parse(file).name;
 
     if (fileName !== 'config') {
       blueprints.push(file);
@@ -49,12 +54,15 @@ const getBlueprints= (root, name, callback) => {
   });
 };
 
-const createDirectory = (directory, callback) =>
+const createDirectory = (directory, template, callback) =>
     mkdirp(directory, {}, callback);
 
-const copyFiles = (sources, targetDirectory, path, callback) => {
+const copyFiles = (sources, targetDirectory, path, template, callback) => {
   sources.forEach(source => {
-    const target = pathUtil.join(targetDirectory, pathUtil.basename(source));
+    const fileName = template ?
+        template + pathUtil.extname(source) :
+        pathUtil.basename(source);
+    const target = pathUtil.join(targetDirectory, fileName);
 
     const rd = fs.createReadStream(source, { encoding: 'utf8' });
     rd.on("error", err => error(err));
@@ -64,9 +72,10 @@ const copyFiles = (sources, targetDirectory, path, callback) => {
     wr.on("close", () => done(target));
 
     const handleTemplateVariables = new ss.SmartStream('ReplaceTemplateVariables');
+    const __PATH__ = template ? path + pathUtil.parse(fileName).name.capitalize() : path;
 
     handleTemplateVariables.setMiddleware((data, callback) =>
-      replaceTemplateVariables(data, path, callback)
+      replaceTemplateVariables(data, __PATH__, callback)
     );
 
     rd.pipe(handleTemplateVariables)
@@ -75,6 +84,10 @@ const copyFiles = (sources, targetDirectory, path, callback) => {
 
   const error = err => log.error(err);
   const done = target => callback(target);
+};
+
+const copyFilesAsTypes = (source, targetDirectory, path, callback) => {
+
 };
 
 const replaceTemplateVariables = (data, path, callback) => {

@@ -27,6 +27,10 @@ var _smartStream = require('smart-stream');
 
 var _smartStream2 = _interopRequireDefault(_smartStream);
 
+var _inflection = require('inflection');
+
+var _inflection2 = _interopRequireDefault(_inflection);
+
 var _chalk = require('chalk');
 
 var _chalk2 = _interopRequireDefault(_chalk);
@@ -46,15 +50,17 @@ function generate(args) {
   var blueprintsRoot = 'dummy/blueprints';
 
   var path = args[1];
+  var template = args[2];
+
   var destinationRoot = 'dummy/app';
-  var destinationDirectory = destinationRoot + '/' + path;
+  var destinationDirectory = template ? destinationRoot + '/' + path + '/' + _inflection2['default'].pluralize(blueprintName) : destinationRoot + '/' + path;
   var destinationPath = destinationRoot + '/' + path;
 
   log('installing ' + _chalk2['default'].white(path + ' ' + blueprintName));
 
   getBlueprints(blueprintsRoot, blueprintName, function (blueprints) {
-    return createDirectory(destinationDirectory, function () {
-      return copyFiles(blueprints, destinationDirectory, path, function (target) {
+    return createDirectory(destinationDirectory, template, function () {
+      return copyFiles(blueprints, destinationDirectory, path, template, function (target) {
         return success(target);
       });
     });
@@ -68,7 +74,7 @@ var getBlueprints = function getBlueprints(root, name, callback) {
   var blueprints = [];
 
   blueprintFinder.on('file', function (file) {
-    var fileName = _path2['default'].parse(file).name;;
+    var fileName = _path2['default'].parse(file).name;
 
     if (fileName !== 'config') {
       blueprints.push(file);
@@ -80,13 +86,14 @@ var getBlueprints = function getBlueprints(root, name, callback) {
   });
 };
 
-var createDirectory = function createDirectory(directory, callback) {
+var createDirectory = function createDirectory(directory, template, callback) {
   return (0, _mkdirp2['default'])(directory, {}, callback);
 };
 
-var copyFiles = function copyFiles(sources, targetDirectory, path, callback) {
+var copyFiles = function copyFiles(sources, targetDirectory, path, template, callback) {
   sources.forEach(function (source) {
-    var target = _path2['default'].join(targetDirectory, _path2['default'].basename(source));
+    var fileName = template ? template + _path2['default'].extname(source) : _path2['default'].basename(source);
+    var target = _path2['default'].join(targetDirectory, fileName);
 
     var rd = _fs2['default'].createReadStream(source, { encoding: 'utf8' });
     rd.on("error", function (err) {
@@ -102,9 +109,10 @@ var copyFiles = function copyFiles(sources, targetDirectory, path, callback) {
     });
 
     var handleTemplateVariables = new _smartStream2['default'].SmartStream('ReplaceTemplateVariables');
+    var __PATH__ = template ? path + _path2['default'].parse(fileName).name.capitalize() : path;
 
     handleTemplateVariables.setMiddleware(function (data, callback) {
-      return replaceTemplateVariables(data, path, callback);
+      return replaceTemplateVariables(data, __PATH__, callback);
     });
 
     rd.pipe(handleTemplateVariables).pipe(wr);
@@ -117,6 +125,8 @@ var copyFiles = function copyFiles(sources, targetDirectory, path, callback) {
     return callback(target);
   };
 };
+
+var copyFilesAsTypes = function copyFilesAsTypes(source, targetDirectory, path, callback) {};
 
 var replaceTemplateVariables = function replaceTemplateVariables(data, path, callback) {
   var result = data.replace(/<% PATH %>/g, path).replace(/<% PATH_CAMEL_CASE %>/g, path.camelize()).replace(/<% PATH_TITLE_CASE %>/g, path.titleCase());

@@ -25,6 +25,10 @@ var _generate = require('./generate');
 
 var _generate2 = _interopRequireDefault(_generate);
 
+String.prototype.capitalize = function () {
+  return this.charAt(0).toUpperCase() + this.slice(1);
+};
+
 String.prototype.camelize = function () {
   return this.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function (match, index) {
     if (+match === 0) return ""; // or if (/\s+/.test(match)) for white spaces

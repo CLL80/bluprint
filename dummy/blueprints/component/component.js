@@ -8,7 +8,7 @@ import {
 
 import shouldPureComponentUpdate from 'react-pure-render/function'
 
-export default class <% path %> extends Component {
+export default class <% PATH_TITLE_CASE %> extends Component {
   shouldComponentUpdate = shouldPureComponentUpdate;
 
   render() {
@@ -19,6 +19,6 @@ export default class <% path %> extends Component {
   }
 }
 
-<% path %>.propTypes = {
+<% PATH_TITLE_CASE %>.propTypes = {
 
 };

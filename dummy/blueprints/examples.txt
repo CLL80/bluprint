@@ -1,0 +1,5 @@
+// Generates __pods__/todos/index/component.js
+bluprint generate component todos/index
+
+// Generates __pods__/todos/components/List.js
+blueprint generate component todos List
