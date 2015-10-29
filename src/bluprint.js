@@ -27,11 +27,13 @@ String.prototype.titleCase = function() {
 program
   .version('0.1.0')
   .usage('<keywords> [options]')
-  .option('-p, --pods [pods flag]', 'Generates using the defined pods based file structure')
+  .option('-p, --pod [pods flag]', 'Generates using the defined pods based file structure')
+  .option('--pods [pods flag alias]', 'Generates using the defined pods based file structure')
   .on('--help', () => help.print())
   .parse(process.argv);
 
-const { args } = program;
+const { args, pods, pod } = program;
+const usePods = pod || pods;
 
 const anyArgs = () => !!args.length;
 
@@ -39,7 +41,7 @@ if(!anyArgs()) {
   program.help();
 } else {
   if (args[0] === "generate") {
-    generate(_.drop(args));
+    generate(_.drop(args), usePods);
   } else {
     program.help();
   }

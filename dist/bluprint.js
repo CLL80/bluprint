@@ -42,11 +42,15 @@ String.prototype.titleCase = function () {
   });
 };
 
-_commander2['default'].version('0.1.0').usage('<keywords> [options]').option('-p, --pods [pods flag]', 'Generates using the defined pods based file structure').on('--help', function () {
+_commander2['default'].version('0.1.0').usage('<keywords> [options]').option('-p, --pod [pods flag]', 'Generates using the defined pods based file structure').option('--pods [pods flag alias]', 'Generates using the defined pods based file structure').on('--help', function () {
   return _help2['default'].print();
 }).parse(process.argv);
 
 var args = _commander2['default'].args;
+var pods = _commander2['default'].pods;
+var pod = _commander2['default'].pod;
+
+var usePods = pod || pods;
 
 var anyArgs = function anyArgs() {
   return !!args.length;
@@ -56,7 +60,7 @@ if (!anyArgs()) {
   _commander2['default'].help();
 } else {
   if (args[0] === "generate") {
-    (0, _generate2['default'])(_lodash2['default'].drop(args));
+    (0, _generate2['default'])(_lodash2['default'].drop(args), usePods);
   } else {
     _commander2['default'].help();
   }

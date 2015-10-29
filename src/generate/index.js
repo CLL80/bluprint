@@ -35,9 +35,7 @@ const log = chip();
 // or             __root__/__podsRoot__/todos/components/List
 //
 
-export default function generate(args) {
-  const usePods = true; // Temp
-
+export default function generate(args, usePods) {
   // Needs to be defined via config
   const __destinationRoot__ = 'dummy/app';
   const __blueprintRoot__ = 'dummy/blueprints';

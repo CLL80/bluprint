@@ -67,9 +67,7 @@ var log = (0, _chip2['default'])();
 // or             __root__/__podsRoot__/todos/components/List
 //
 
-function generate(args) {
-  var usePods = true; // Temp
-
+function generate(args, usePods) {
   // Needs to be defined via config
   var __destinationRoot__ = 'dummy/app';
   var __blueprintRoot__ = 'dummy/blueprints';
