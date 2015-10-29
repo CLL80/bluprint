@@ -1,7 +1,7 @@
 'use strict'
 
 import fs from 'fs';
-import pathUtil from 'path';
+import path from 'path';
 import mkdirp from 'mkdirp';
 import find from 'findit'
 import ss from 'smart-stream';
@@ -60,8 +60,8 @@ export default function generate(args) {
   // If using pods and supplied a template name we must include the typed
   // folder name in the structure
   const __destinationDirectory__ = usePods && __templateName__ ?
-      pathUtil.join(__destinationRoot__, __templateDirectory__, __blueprintTypePlur__) :
-      pathUtil.join(__destinationRoot__, __templateDirectory__);
+      path.join(__destinationRoot__, __templateDirectory__, __blueprintTypePlur__) :
+      path.join(__destinationRoot__, __templateDirectory__);
 
   log('installing ' + chalk.white(`${__templateDirectory__} ${__blueprintType__}`));
 
@@ -75,12 +75,12 @@ export default function generate(args) {
   );
 };
 
-const getBlueprints= (__root__, name, callback) => {
-  const blueprintFinder = find(pathUtil.join(__root__, name));
+const getBlueprints= (__blueprintRoot__, __blueprintType__, callback) => {
+  const blueprintFinder = find(path.join(__blueprintRoot__, __blueprintType__));
   var blueprints = []
 
   blueprintFinder.on('file', file => {
-    let fileName = pathUtil.parse(file).name;
+    let fileName = path.parse(file).name;
 
     if (fileName !== 'config') {
       blueprints.push(file);
@@ -92,17 +92,17 @@ const getBlueprints= (__root__, name, callback) => {
   });
 };
 
-const createDirectory = (__directory__,  callback) =>
-    mkdirp(__directory__, {}, callback);
+const createDirectory = (__destinationDirectory__,  callback) =>
+    mkdirp(__destinationDirectory__, {}, callback);
 
-const copyFiles = (sources, __destinationDirectory__, __targetDirectory__, __templateName__, callback) => {
-  sources.forEach(source => {
+const copyFiles = (blueprints, __destinationDirectory__, __templateDirectory__, __templateName__, callback) => {
+  blueprints.forEach(blueprint => {
     const fileName = __templateName__ ?
-        __templateName__ + pathUtil.extname(source) :
-        pathUtil.basename(source);
-    const target = pathUtil.join(__destinationDirectory__, fileName);
+        __templateName__ + path.extname(blueprint) :
+        path.basename(blueprint);
+    const target = path.join(__destinationDirectory__, fileName);
 
-    const rd = fs.createReadStream(source, { encoding: 'utf8' });
+    const rd = fs.createReadStream(blueprint, { encoding: 'utf8' });
     rd.on("error", err => error(err));
 
     const wr = fs.createWriteStream(target);
@@ -110,10 +110,10 @@ const copyFiles = (sources, __destinationDirectory__, __targetDirectory__, __tem
     wr.on("close", () => done(target));
 
     const handleTemplateVariables = new ss.SmartStream('ReplaceTemplateVariables');
-    const __PATH__ = __templateName__ ? pathUtil.parse(fileName).name : __targetDirectory__;
+    const __PATH_VARIABLE__ = __templateName__ ? path.parse(fileName).name : __templateDirectory__;
 
     handleTemplateVariables.setMiddleware((data, callback) =>
-      replaceTemplateVariables(data, __PATH__, callback)
+      replaceTemplateVariables(data, __PATH_VARIABLE__, callback)
     );
 
     rd.pipe(handleTemplateVariables)
@@ -124,17 +124,14 @@ const copyFiles = (sources, __destinationDirectory__, __targetDirectory__, __tem
   const done = target => callback(target);
 };
 
-const copyFilesAsTypes = (source, targetDirectory, path, callback) => {
+const replaceTemplateVariables = (data, __PATH_VARIABLE__, callback) => {
+  // Template variables to replace
+  const result = data.replace(/<% PATH %>/g, __PATH_VARIABLE__)
+                     .replace(/<% PATH_CAMEL_CASE %>/g, __PATH_VARIABLE__.camelize())
+                     .replace(/<% PATH_TITLE_CASE %>/g, __PATH_VARIABLE__.titleCase());
 
-};
-
-const replaceTemplateVariables = (data, path, callback) => {
-  const result = data.replace(/<% PATH %>/g, path)
-                     .replace(/<% PATH_CAMEL_CASE %>/g, path.camelize())
-                     .replace(/<% PATH_TITLE_CASE %>/g, path.titleCase());
-
-  callback(null, result);
   // NOTE: set result to undefined to prevent it from moving downstream
+  callback(null, result);
 }
 
 const success = (target) => log.info(chalk.green('  create ') + target);

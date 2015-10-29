@@ -3,7 +3,7 @@
 'use strict'
 
 import program from 'commander';
-import pathUtil from 'path';
+import path from 'path';
 import _ from 'lodash';
 
 import help from './help';
@@ -17,7 +17,7 @@ String.prototype.camelize = function() {
   return this.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, (match, index) => {
     if (+match === 0) return ""; // or if (/\s+/.test(match)) for white spaces
     return index == 0 ? match.toLowerCase() : match.toUpperCase();
-  }).split(pathUtil.sep).join("");
+  }).split(path.sep).join("");
 };
 
 String.prototype.titleCase = function() {

@@ -106,8 +106,8 @@ function generate(args) {
 
 ;
 
-var getBlueprints = function getBlueprints(__root__, name, callback) {
-  var blueprintFinder = (0, _findit2['default'])(_path2['default'].join(__root__, name));
+var getBlueprints = function getBlueprints(__blueprintRoot__, __blueprintType__, callback) {
+  var blueprintFinder = (0, _findit2['default'])(_path2['default'].join(__blueprintRoot__, __blueprintType__));
   var blueprints = [];
 
   blueprintFinder.on('file', function (file) {
@@ -123,16 +123,16 @@ var getBlueprints = function getBlueprints(__root__, name, callback) {
   });
 };
 
-var createDirectory = function createDirectory(__directory__, callback) {
-  return (0, _mkdirp2['default'])(__directory__, {}, callback);
+var createDirectory = function createDirectory(__destinationDirectory__, callback) {
+  return (0, _mkdirp2['default'])(__destinationDirectory__, {}, callback);
 };
 
-var copyFiles = function copyFiles(sources, __destinationDirectory__, __targetDirectory__, __templateName__, callback) {
-  sources.forEach(function (source) {
-    var fileName = __templateName__ ? __templateName__ + _path2['default'].extname(source) : _path2['default'].basename(source);
+var copyFiles = function copyFiles(blueprints, __destinationDirectory__, __templateDirectory__, __templateName__, callback) {
+  blueprints.forEach(function (blueprint) {
+    var fileName = __templateName__ ? __templateName__ + _path2['default'].extname(blueprint) : _path2['default'].basename(blueprint);
     var target = _path2['default'].join(__destinationDirectory__, fileName);
 
-    var rd = _fs2['default'].createReadStream(source, { encoding: 'utf8' });
+    var rd = _fs2['default'].createReadStream(blueprint, { encoding: 'utf8' });
     rd.on("error", function (err) {
       return error(err);
     });
@@ -146,10 +146,10 @@ var copyFiles = function copyFiles(sources, __destinationDirectory__, __targetDi
     });
 
     var handleTemplateVariables = new _smartStream2['default'].SmartStream('ReplaceTemplateVariables');
-    var __PATH__ = __templateName__ ? _path2['default'].parse(fileName).name : __targetDirectory__;
+    var __PATH_VARIABLE__ = __templateName__ ? _path2['default'].parse(fileName).name : __templateDirectory__;
 
     handleTemplateVariables.setMiddleware(function (data, callback) {
-      return replaceTemplateVariables(data, __PATH__, callback);
+      return replaceTemplateVariables(data, __PATH_VARIABLE__, callback);
     });
 
     rd.pipe(handleTemplateVariables).pipe(wr);
@@ -163,13 +163,12 @@ var copyFiles = function copyFiles(sources, __destinationDirectory__, __targetDi
   };
 };
 
-var copyFilesAsTypes = function copyFilesAsTypes(source, targetDirectory, path, callback) {};
+var replaceTemplateVariables = function replaceTemplateVariables(data, __PATH_VARIABLE__, callback) {
+  // Template variables to replace
+  var result = data.replace(/<% PATH %>/g, __PATH_VARIABLE__).replace(/<% PATH_CAMEL_CASE %>/g, __PATH_VARIABLE__.camelize()).replace(/<% PATH_TITLE_CASE %>/g, __PATH_VARIABLE__.titleCase());
 
-var replaceTemplateVariables = function replaceTemplateVariables(data, path, callback) {
-  var result = data.replace(/<% PATH %>/g, path).replace(/<% PATH_CAMEL_CASE %>/g, path.camelize()).replace(/<% PATH_TITLE_CASE %>/g, path.titleCase());
-
-  callback(null, result);
   // NOTE: set result to undefined to prevent it from moving downstream
+  callback(null, result);
 };
 
 var success = function success(target) {
