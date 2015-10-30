@@ -1,16 +1,15 @@
 'use strict'
 
-import fs from 'fs';
 import path from 'path';
-import mkdirp from 'mkdirp';
-import find from 'findit'
-import ss from 'smart-stream';
 
 import chalk from 'chalk';
 import chip from 'chip';
 import colors from 'colors';
 
-import replaceTemplateVariables from './tasks/replace-template-variables';
+import getBlueprints from './tasks/get-blueprints';
+import createDirectory from './tasks/create-directory';
+import copyFiles from './tasks/copy-files';
+import success from './tasks/success';
 
 const log = chip();
 
@@ -76,54 +75,3 @@ export default function generate(args, usePods) {
     )
   );
 };
-
-const getBlueprints = (__blueprintRoot__, __blueprintType__, callback) => {
-  const blueprintFinder = find(path.join(__blueprintRoot__, __blueprintType__));
-  var blueprints = []
-
-  blueprintFinder.on('file', file => {
-    let fileName = path.parse(file).name;
-
-    if (fileName !== 'config') {
-      blueprints.push(file);
-    }
-  });
-
-  blueprintFinder.on('end', () => {
-    callback(blueprints)
-  });
-};
-
-const createDirectory = (__destinationDirectory__,  callback) =>
-    mkdirp(__destinationDirectory__, {}, callback);
-
-const copyFiles = (blueprints, __destinationDirectory__, __templateDirectory__, __templateName__, callback) => {
-  blueprints.forEach(blueprint => {
-    const fileName = __templateName__ ?
-        __templateName__ + path.extname(blueprint) :
-        path.basename(blueprint);
-    const target = path.join(__destinationDirectory__, fileName);
-
-    const rd = fs.createReadStream(blueprint, { encoding: 'utf8' });
-    rd.on("error", err => error(err));
-
-    const wr = fs.createWriteStream(target);
-    wr.on("error", err => error(err));
-    wr.on("close", () => done(target));
-
-    const handleTemplateVariables = new ss.SmartStream('ReplaceTemplateVariables');
-    const __templateToken__ = __templateName__ ? path.parse(fileName).name : __templateDirectory__;
-
-    handleTemplateVariables.setMiddleware((data, callback) =>
-      replaceTemplateVariables(data, __templateToken__, callback)
-    );
-
-    rd.pipe(handleTemplateVariables)
-      .pipe(wr);
-  });
-
-  const error = err => log.error(err);
-  const done = target => callback(target);
-};
-
-const success = (target) => log.info(chalk.green('  create ') + target);
