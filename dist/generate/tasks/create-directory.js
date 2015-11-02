@@ -11,8 +11,23 @@ var _mkdirp = require('mkdirp');
 
 var _mkdirp2 = _interopRequireDefault(_mkdirp);
 
-function createDirectory(__destinationDirectory__, callback) {
-  (0, _mkdirp2['default'])(__destinationDirectory__, {}, callback);
+var _path = require('path');
+
+var _path2 = _interopRequireDefault(_path);
+
+var _lodash = require('lodash');
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+function createDirectory(blueprints, __destinationDirectory__, callback) {
+  var hasSubDirectories = blueprints.root.length !== 0;
+  var rootCallback = hasSubDirectories ? function (subDir) {
+    return _lodash2['default'].forEach(subDir, function (n, key) {
+      console.log(key);
+    });
+  } : callback;
+
+  (0, _mkdirp2['default'])(__destinationDirectory__, {}, rootCallback);
 }
 
 module.exports = exports['default'];

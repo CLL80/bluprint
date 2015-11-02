@@ -91,11 +91,13 @@ function generate(args, usePods) {
 
   // Task flow
   (0, _tasksGetBlueprints2['default'])(__blueprintRoot__, __blueprintType__, function (blueprints) {
-    return (0, _tasksCreateDirectory2['default'])(__destinationDirectory__, function () {
-      return (0, _tasksCopyFiles2['default'])(blueprints, __destinationDirectory__, __templateDirectory__, __templateName__, function (target) {
-        return (0, _tasksSuccess2['default'])(target);
-      });
-    });
+    return (0, _tasksCreateDirectory2['default'])(blueprints, __destinationDirectory__, function () {
+      return true;
+    }
+    /*copyFiles(blueprints, __destinationDirectory__, __templateDirectory__, __templateName__, (target) =>
+      success(target)
+    )*/
+    );
   });
 }
 

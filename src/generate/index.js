@@ -68,10 +68,10 @@ export default function generate(args, usePods) {
 
   // Task flow
   getBlueprints(__blueprintRoot__, __blueprintType__, (blueprints) =>
-    createDirectory(__destinationDirectory__, () =>
-      copyFiles(blueprints, __destinationDirectory__, __templateDirectory__, __templateName__, (target) =>
+    createDirectory(blueprints, __destinationDirectory__, () => true
+      /*copyFiles(blueprints, __destinationDirectory__, __templateDirectory__, __templateName__, (target) =>
         success(target)
-      )
+      )*/
     )
   );
 };
