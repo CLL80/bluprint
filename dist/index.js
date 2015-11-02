@@ -19,9 +19,9 @@ var _inflection = require('inflection');
 
 var _inflection2 = _interopRequireDefault(_inflection);
 
-var _readConfig = require('./readConfig');
+var _readGlobalConfig = require('./read-global-config');
 
-var _readConfig2 = _interopRequireDefault(_readConfig);
+var _readGlobalConfig2 = _interopRequireDefault(_readGlobalConfig);
 
 var _help = require('./help');
 
@@ -68,18 +68,18 @@ var args = _commander2['default'].args;
 var pods = _commander2['default'].pods;
 var pod = _commander2['default'].pod;
 
-var usePods = pod || pods;
+var podsFlag = pod || pods;
 
 var anyArgs = function anyArgs() {
   return !!args.length;
 };
 
-(0, _readConfig2['default'])(function (configOptions) {
+(0, _readGlobalConfig2['default'])(function (configOptions) {
   if (!anyArgs()) {
     _commander2['default'].help();
   } else {
     if (args[0] === "generate") {
-      (0, _generate2['default'])((0, _lodash.drop)(args), usePods, configOptions);
+      (0, _generate2['default'])((0, _lodash.drop)(args), podsFlag, configOptions);
     } else {
       _commander2['default'].help();
     }

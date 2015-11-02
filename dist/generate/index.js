@@ -1,7 +1,7 @@
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
-    value: true
+  value: true
 });
 exports['default'] = generate;
 
@@ -22,6 +22,10 @@ var _chip2 = _interopRequireDefault(_chip);
 var _colors = require('colors');
 
 var _colors2 = _interopRequireDefault(_colors);
+
+var _tasksReadBlueprintConfig = require('./tasks/read-blueprint-config');
+
+var _tasksReadBlueprintConfig2 = _interopRequireDefault(_tasksReadBlueprintConfig);
 
 var _tasksSerializeBlueprints = require('./tasks/serialize-blueprints');
 
@@ -55,16 +59,19 @@ var log = (0, _chip2['default'])();
 // or             __root__/__podsRoot__/todos/components/List
 //
 
-function generate(args, usePods, configOptions) {
-    console.log(usePods);
-    console.log(configOptions.podsDirectory);
-    // Needs to be defined via config
-    var __destinationRoot__ = usePods && configOptions.podsDirectory ? _path2['default'].join(configOptions.rootDirectory, configOptions.podsDirectory) : configOptions.rootDirectory;
-    var __blueprintRoot__ = configOptions.blueprintsDirectory;
+function generate(args, podsFlag, globalConfigOptions) {
+  // Computed __blueprintRoot__ using config
+  var __blueprintRoot__ = globalConfigOptions.blueprintsDirectory;
 
-    // First argument is the type of blueprint we're generating
-    var __blueprintType__ = args[0];
-    var __blueprintTypePlur__ = __blueprintType__.plural();
+  // First argument is the type of blueprint we're generating
+  var __blueprintType__ = args[0];
+  var __blueprintTypePlur__ = __blueprintType__.plural();
+
+  (0, _tasksReadBlueprintConfig2['default'])(_path2['default'].join(__blueprintRoot__, __blueprintType__), function (blueprintConfigOptions) {
+    var usePods = blueprintConfigOptions.forcePods || podsFlag;
+
+    // Computed __destinationRoot__ using config
+    var __destinationRoot__ = usePods && globalConfigOptions.podsDirectory ? _path2['default'].join(globalConfigOptions.rootDirectory, globalConfigOptions.podsDirectory) : globalConfigOptions.rootDirectory;
 
     // If using types layout the second argument is the template name
     // Is using pods layout the second argument is the target directory
@@ -85,8 +92,9 @@ function generate(args, usePods, configOptions) {
 
     // Task flow
     (0, _tasksSerializeBlueprints2['default'])(__blueprintRoot__, __blueprintType__, function (blueprints) {
-        return (0, _tasksBuildBoilerplate2['default'])(blueprints, __destinationDirectory__, __templateDirectory__, __templateName__);
+      return (0, _tasksBuildBoilerplate2['default'])(blueprints, __destinationDirectory__, __templateDirectory__, __templateName__);
     });
+  });
 }
 
 ;

@@ -7,7 +7,7 @@ import path from 'path';
 import { drop } from 'lodash';
 import inflection from 'inflection';
 
-import readConfig from './readConfig';
+import readGlobalConfig from './read-global-config';
 import help from './help';
 import generate from './generate';
 
@@ -47,16 +47,16 @@ program
   .parse(process.argv);
 
 const { args, pods, pod } = program;
-const usePods = pod || pods;
+const podsFlag = pod || pods;
 
 const anyArgs = () => !!args.length;
 
-readConfig(configOptions => {
+readGlobalConfig(configOptions => {
   if(!anyArgs()) {
     program.help();
   } else {
     if (args[0] === "generate") {
-      generate(drop(args), usePods, configOptions);
+      generate(drop(args), podsFlag, configOptions);
     } else {
       program.help();
     }
