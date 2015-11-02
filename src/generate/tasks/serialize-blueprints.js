@@ -1,6 +1,5 @@
 import path from 'path';
 import find from 'findit'
-
 import { set, get } from 'lodash';
 
 export default function serializeBlueprints(__blueprintRoot__, __blueprintType__, callback) {

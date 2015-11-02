@@ -7,9 +7,7 @@ import chip from 'chip';
 import colors from 'colors';
 
 import serializeBlueprints from './tasks/serialize-blueprints';
-import buildBoilerplate from './tasks/create-directory';
-import copyFiles from './tasks/copy-files';
-import success from './tasks/success';
+import buildBoilerplate from './tasks/build-boilerplate';
 
 const log = chip();
 

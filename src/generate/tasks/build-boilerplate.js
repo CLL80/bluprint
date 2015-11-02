@@ -1,6 +1,6 @@
 import mkdirp from 'mkdirp';
 import path from 'path';
-import _ from 'lodash';
+import { remove } from 'lodash';
 
 import copyFiles from './copy-files';
 
@@ -12,11 +12,11 @@ export default function buildBoilerplate(blueprints, __destinationDirectory__,  
 
 function createDirectory(__dir__, dirObject, callback) {
   mkdirp(__dir__, {}, () => {
-    // After the directory is created we callback to write files
+    // After the directory is created we callback to copy files
     callback(dirObject.files, __dir__);
 
     // If has sub directories we need to create those too
-    let subDirectories = _.remove(Object.keys(dirObject), n => n !== 'files');
+    let subDirectories = remove(Object.keys(dirObject), n => n !== 'files');
 
     subDirectories.forEach(key =>
       createDirectory(path.join(__dir__, key), dirObject[key], callback)

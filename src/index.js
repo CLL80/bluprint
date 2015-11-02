@@ -4,7 +4,7 @@
 
 import program from 'commander';
 import path from 'path';
-import _ from 'lodash';
+import { drop } from 'lodash';
 import inflection from 'inflection';
 
 import help from './help';
@@ -54,7 +54,7 @@ if(!anyArgs()) {
   program.help();
 } else {
   if (args[0] === "generate") {
-    generate(_.drop(args), usePods);
+    generate(drop(args), usePods);
   } else {
     program.help();
   }

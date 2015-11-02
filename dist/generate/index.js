@@ -27,17 +27,9 @@ var _tasksSerializeBlueprints = require('./tasks/serialize-blueprints');
 
 var _tasksSerializeBlueprints2 = _interopRequireDefault(_tasksSerializeBlueprints);
 
-var _tasksCreateDirectory = require('./tasks/create-directory');
+var _tasksBuildBoilerplate = require('./tasks/build-boilerplate');
 
-var _tasksCreateDirectory2 = _interopRequireDefault(_tasksCreateDirectory);
-
-var _tasksCopyFiles = require('./tasks/copy-files');
-
-var _tasksCopyFiles2 = _interopRequireDefault(_tasksCopyFiles);
-
-var _tasksSuccess = require('./tasks/success');
-
-var _tasksSuccess2 = _interopRequireDefault(_tasksSuccess);
+var _tasksBuildBoilerplate2 = _interopRequireDefault(_tasksBuildBoilerplate);
 
 var log = (0, _chip2['default'])();
 
@@ -91,7 +83,7 @@ function generate(args, usePods) {
 
   // Task flow
   (0, _tasksSerializeBlueprints2['default'])(__blueprintRoot__, __blueprintType__, function (blueprints) {
-    return (0, _tasksCreateDirectory2['default'])(blueprints, __destinationDirectory__, __templateDirectory__, __templateName__);
+    return (0, _tasksBuildBoilerplate2['default'])(blueprints, __destinationDirectory__, __templateDirectory__, __templateName__);
   });
 }
 

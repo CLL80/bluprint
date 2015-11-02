@@ -15,8 +15,6 @@ var _path2 = _interopRequireDefault(_path);
 
 var _lodash = require('lodash');
 
-var _lodash2 = _interopRequireDefault(_lodash);
-
 var _inflection = require('inflection');
 
 var _inflection2 = _interopRequireDefault(_inflection);
@@ -76,7 +74,7 @@ if (!anyArgs()) {
   _commander2['default'].help();
 } else {
   if (args[0] === "generate") {
-    (0, _generate2['default'])(_lodash2['default'].drop(args), usePods);
+    (0, _generate2['default'])((0, _lodash.drop)(args), usePods);
   } else {
     _commander2['default'].help();
   }

@@ -5,23 +5,19 @@ Object.defineProperty(exports, '__esModule', {
 });
 exports['default'] = replaceTemplateVariables;
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
 var _lodash = require('lodash');
-
-var _lodash2 = _interopRequireDefault(_lodash);
 
 function replaceTemplateVariables(data, __templateToken__, callback) {
   var result = data;
 
-  var templateVariables = _lodash2['default'].uniq(data.match(/<%[^>]*%>/g).map(function (variable) {
+  var templateVariables = (0, _lodash.uniq)(data.match(/<%[^>]*%>/g).map(function (variable) {
     return variable.substring(2, variable.length - 2).trim();
   }));
 
   templateVariables.forEach(function (variable) {
     var args = variable.split(/\s+/);
     var token = __templateToken__; // should use args[0] to determine
-    var mutations = _lodash2['default'].drop(args);
+    var mutations = (0, _lodash.drop)(args);
 
     mutations.forEach(function (mutation) {
       if (typeof String.prototype[mutation] === 'function') {
