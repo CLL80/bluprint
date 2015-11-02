@@ -23,9 +23,9 @@ var _colors = require('colors');
 
 var _colors2 = _interopRequireDefault(_colors);
 
-var _tasksGetBlueprints = require('./tasks/get-blueprints');
+var _tasksSerializeBlueprints = require('./tasks/serialize-blueprints');
 
-var _tasksGetBlueprints2 = _interopRequireDefault(_tasksGetBlueprints);
+var _tasksSerializeBlueprints2 = _interopRequireDefault(_tasksSerializeBlueprints);
 
 var _tasksCreateDirectory = require('./tasks/create-directory');
 
@@ -90,7 +90,7 @@ function generate(args, usePods) {
   log('installing ' + _chalk2['default'].white(__blueprintType__ + ' ' + __logPath__));
 
   // Task flow
-  (0, _tasksGetBlueprints2['default'])(__blueprintRoot__, __blueprintType__, function (blueprints) {
+  (0, _tasksSerializeBlueprints2['default'])(__blueprintRoot__, __blueprintType__, function (blueprints) {
     return (0, _tasksCreateDirectory2['default'])(blueprints, __destinationDirectory__, function () {
       return true;
     }

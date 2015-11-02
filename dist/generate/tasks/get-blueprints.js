@@ -30,7 +30,7 @@ function getBlueprints(__blueprintRoot__, __blueprintType__, callback) {
 
   directoryFinder.on('directory', function (dir) {
     if (dir !== __blueprintDir__) {
-      var relativeDir = _path2['default'].basename(dir.replace(__blueprintDir__, ''));
+      var relativeDir = dir.replace(__blueprintDir__, '').replace(/^\//, '');
       var keyHierarchy = relativeDir.replace(_path2['default'].sep, '.');
 
       (0, _lodash.set)(blueprints.root, keyHierarchy, { files: [] });
@@ -45,7 +45,7 @@ function getBlueprints(__blueprintRoot__, __blueprintType__, callback) {
 
       if (fileName !== 'config') {
         var dir = _path2['default'].dirname(file);
-        var relativeDir = _path2['default'].basename(dir.replace(__blueprintDir__, ''));
+        var relativeDir = dir.replace(__blueprintDir__, '').replace(/^\//, '');
         var keyHierarchy = dir === __blueprintDir__ ? 'root.files' : 'root.' + relativeDir.replace(_path2['default'].sep, '.') + '.files';
 
         var currentFiles = (0, _lodash.get)(blueprints, keyHierarchy);

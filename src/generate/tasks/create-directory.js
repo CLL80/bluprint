@@ -3,11 +3,9 @@ import path from 'path';
 import _ from 'lodash';
 
 export default function createDirectory(blueprints, __destinationDirectory__,  callback) {
-  const hasSubDirectories = blueprints.root.length !== 0;
+  const hasSubDirectories = Object.keys(blueprints.root).length !== 0;
   const rootCallback = hasSubDirectories ? (subDir) =>
-      _.forEach(subDir, (n, key) => {
-         console.log(key);
-      }) :
+      console.log('test'):
       callback;
 
   mkdirp(__destinationDirectory__, {}, rootCallback);

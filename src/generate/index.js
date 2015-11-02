@@ -6,7 +6,7 @@ import chalk from 'chalk';
 import chip from 'chip';
 import colors from 'colors';
 
-import getBlueprints from './tasks/get-blueprints';
+import serializeBlueprints from './tasks/serialize-blueprints';
 import createDirectory from './tasks/create-directory';
 import copyFiles from './tasks/copy-files';
 import success from './tasks/success';
@@ -67,7 +67,7 @@ export default function generate(args, usePods) {
   log('installing ' + chalk.white(`${__blueprintType__} ${__logPath__}`));
 
   // Task flow
-  getBlueprints(__blueprintRoot__, __blueprintType__, (blueprints) =>
+  serializeBlueprints(__blueprintRoot__, __blueprintType__, (blueprints) =>
     createDirectory(blueprints, __destinationDirectory__, () => true
       /*copyFiles(blueprints, __destinationDirectory__, __templateDirectory__, __templateName__, (target) =>
         success(target)
