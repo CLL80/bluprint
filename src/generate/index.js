@@ -6,7 +6,7 @@ import chalk from 'chalk';
 import chip from 'chip';
 import colors from 'colors';
 
-import readBlueprintConfig from './tasks/read-blueprint-config';
+import readConfig from '../read-config';
 import serializeBlueprints from './tasks/serialize-blueprints';
 import buildBoilerplate from './tasks/build-boilerplate';
 
@@ -42,7 +42,7 @@ export default function generate(args, podsFlag, globalConfigOptions) {
   const __blueprintType__ = args[0];
   const __blueprintTypePlur__ = __blueprintType__.plural()
 
-  readBlueprintConfig(path.join(__blueprintRoot__, __blueprintType__), blueprintConfigOptions => {
+  readConfig(path.join(__blueprintRoot__, __blueprintType__, 'config.json'), blueprintConfigOptions => {
     const usePods = blueprintConfigOptions.forcePods || podsFlag;
 
     // Computed __destinationRoot__ using config

@@ -19,9 +19,13 @@ var _inflection = require('inflection');
 
 var _inflection2 = _interopRequireDefault(_inflection);
 
-var _readGlobalConfig = require('./read-global-config');
+var _readConfig = require('./read-config');
 
-var _readGlobalConfig2 = _interopRequireDefault(_readGlobalConfig);
+var _readConfig2 = _interopRequireDefault(_readConfig);
+
+var _globalConfigDefaults = require('./global-config-defaults');
+
+var _globalConfigDefaults2 = _interopRequireDefault(_globalConfigDefaults);
 
 var _help = require('./help');
 
@@ -74,7 +78,7 @@ var anyArgs = function anyArgs() {
   return !!args.length;
 };
 
-(0, _readGlobalConfig2['default'])(function (configOptions) {
+(0, _readConfig2['default'])('./.bluprintconfig', function (configOptions) {
   if (!anyArgs()) {
     _commander2['default'].help();
   } else {
@@ -84,4 +88,4 @@ var anyArgs = function anyArgs() {
       _commander2['default'].help();
     }
   }
-});
+}, _globalConfigDefaults2['default']);

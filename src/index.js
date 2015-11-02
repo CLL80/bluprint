@@ -7,7 +7,8 @@ import path from 'path';
 import { drop } from 'lodash';
 import inflection from 'inflection';
 
-import readGlobalConfig from './read-global-config';
+import readConfig from './read-config';
+import globalConfigDefaults from './global-config-defaults';
 import help from './help';
 import generate from './generate';
 
@@ -51,7 +52,7 @@ const podsFlag = pod || pods;
 
 const anyArgs = () => !!args.length;
 
-readGlobalConfig(configOptions => {
+readConfig('./.bluprintconfig', configOptions => {
   if(!anyArgs()) {
     program.help();
   } else {
@@ -61,4 +62,4 @@ readGlobalConfig(configOptions => {
       program.help();
     }
   }
-});
+}, globalConfigDefaults);
