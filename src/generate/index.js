@@ -7,7 +7,7 @@ import chip from 'chip';
 import colors from 'colors';
 
 import serializeBlueprints from './tasks/serialize-blueprints';
-import createDirectory from './tasks/create-directory';
+import buildBoilerplate from './tasks/create-directory';
 import copyFiles from './tasks/copy-files';
 import success from './tasks/success';
 
@@ -68,10 +68,6 @@ export default function generate(args, usePods) {
 
   // Task flow
   serializeBlueprints(__blueprintRoot__, __blueprintType__, (blueprints) =>
-    createDirectory(blueprints, __destinationDirectory__, () => true
-      /*copyFiles(blueprints, __destinationDirectory__, __templateDirectory__, __templateName__, (target) =>
-        success(target)
-      )*/
-    )
+    buildBoilerplate(blueprints, __destinationDirectory__, __templateDirectory__, __templateName__)
   );
 };

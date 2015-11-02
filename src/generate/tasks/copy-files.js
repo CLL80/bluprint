@@ -3,8 +3,9 @@ import path from 'path';
 import ss from 'smart-stream';
 
 import replaceTemplateVariables from './replace-template-variables';
+import success from './success';
 
-export default function copyFiles(blueprints, __destinationDirectory__, __templateDirectory__, __templateName__, callback) {
+export default function copyFiles(blueprints, __destinationDirectory__, __templateDirectory__, __templateName__) {
   blueprints.forEach(blueprint => {
     const fileName = __templateName__ ?
         __templateName__ + path.extname(blueprint) :
@@ -30,5 +31,5 @@ export default function copyFiles(blueprints, __destinationDirectory__, __templa
   });
 
   const error = err => log.error(err);
-  const done = target => callback(target);
+  const done = target => success(target);
 };

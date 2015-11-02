@@ -23,7 +23,11 @@ var _replaceTemplateVariables = require('./replace-template-variables');
 
 var _replaceTemplateVariables2 = _interopRequireDefault(_replaceTemplateVariables);
 
-function copyFiles(blueprints, __destinationDirectory__, __templateDirectory__, __templateName__, callback) {
+var _success = require('./success');
+
+var _success2 = _interopRequireDefault(_success);
+
+function copyFiles(blueprints, __destinationDirectory__, __templateDirectory__, __templateName__) {
   blueprints.forEach(function (blueprint) {
     var fileName = __templateName__ ? __templateName__ + _path2['default'].extname(blueprint) : _path2['default'].basename(blueprint);
     var target = _path2['default'].join(__destinationDirectory__, fileName);
@@ -55,7 +59,7 @@ function copyFiles(blueprints, __destinationDirectory__, __templateDirectory__, 
     return log.error(err);
   };
   var done = function done(target) {
-    return callback(target);
+    return (0, _success2['default'])(target);
   };
 }
 
