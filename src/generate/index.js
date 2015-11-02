@@ -34,8 +34,12 @@ const log = chip();
 //
 
 export default function generate(args, usePods, configOptions) {
+  console.log(usePods);
+  console.log(configOptions.podsDirectory);
   // Needs to be defined via config
-  const __destinationRoot__ = configOptions.rootDirectory;
+  const __destinationRoot__ = usePods && configOptions.podsDirectory ?
+      path.join(configOptions.rootDirectory, configOptions.podsDirectory) :
+      configOptions.rootDirectory;
   const __blueprintRoot__ = configOptions.blueprintsDirectory;
 
   // First argument is the type of blueprint we're generating
