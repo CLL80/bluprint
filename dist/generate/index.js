@@ -55,10 +55,10 @@ var log = (0, _chip2['default'])();
 // or             __root__/__podsRoot__/todos/components/List
 //
 
-function generate(args, usePods) {
+function generate(args, usePods, configOptions) {
   // Needs to be defined via config
-  var __destinationRoot__ = 'dummy/app';
-  var __blueprintRoot__ = 'dummy/blueprints';
+  var __destinationRoot__ = configOptions.rootDirectory;
+  var __blueprintRoot__ = configOptions.blueprintsDirectory;
 
   // First argument is the type of blueprint we're generating
   var __blueprintType__ = args[0];

@@ -33,10 +33,10 @@ const log = chip();
 // or             __root__/__podsRoot__/todos/components/List
 //
 
-export default function generate(args, usePods) {
+export default function generate(args, usePods, configOptions) {
   // Needs to be defined via config
-  const __destinationRoot__ = 'dummy/app';
-  const __blueprintRoot__ = 'dummy/blueprints';
+  const __destinationRoot__ = configOptions.rootDirectory;
+  const __blueprintRoot__ = configOptions.blueprintsDirectory;
 
   // First argument is the type of blueprint we're generating
   const __blueprintType__ = args[0];

@@ -7,6 +7,7 @@ import path from 'path';
 import { drop } from 'lodash';
 import inflection from 'inflection';
 
+import readConfig from './readConfig';
 import help from './help';
 import generate from './generate';
 
@@ -50,12 +51,14 @@ const usePods = pod || pods;
 
 const anyArgs = () => !!args.length;
 
-if(!anyArgs()) {
-  program.help();
-} else {
-  if (args[0] === "generate") {
-    generate(drop(args), usePods);
-  } else {
+readConfig(configOptions => {
+  if(!anyArgs()) {
     program.help();
+  } else {
+    if (args[0] === "generate") {
+      generate(drop(args), usePods, configOptions);
+    } else {
+      program.help();
+    }
   }
-}
+});

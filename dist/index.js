@@ -19,6 +19,10 @@ var _inflection = require('inflection');
 
 var _inflection2 = _interopRequireDefault(_inflection);
 
+var _readConfig = require('./readConfig');
+
+var _readConfig2 = _interopRequireDefault(_readConfig);
+
 var _help = require('./help');
 
 var _help2 = _interopRequireDefault(_help);
@@ -70,12 +74,14 @@ var anyArgs = function anyArgs() {
   return !!args.length;
 };
 
-if (!anyArgs()) {
-  _commander2['default'].help();
-} else {
-  if (args[0] === "generate") {
-    (0, _generate2['default'])((0, _lodash.drop)(args), usePods);
-  } else {
+(0, _readConfig2['default'])(function (configOptions) {
+  if (!anyArgs()) {
     _commander2['default'].help();
+  } else {
+    if (args[0] === "generate") {
+      (0, _generate2['default'])((0, _lodash.drop)(args), usePods, configOptions);
+    } else {
+      _commander2['default'].help();
+    }
   }
-}
+});
