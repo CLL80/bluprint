@@ -64,7 +64,7 @@ project
 
 We will need to create two blueprints, one for components and one for actions. These will be placed in `project/blueprints/__blueprint__`.
 
-Here's what a component blueprint for react might look like.
+Here's what a `component` blueprint for react might look like.
 
 ```js
 // component blueprint
@@ -90,7 +90,9 @@ export default class <% TEMPLATE_TOKEN titleCase %> extends Component {
 };
 ```
 
-To generate a Todo component run `bluprint generate component Todo`.
+To generate a Todo `component` run
+
+`bluprint generate component Todo`.
 
 Which will output
 
@@ -175,9 +177,11 @@ app
 
 ```
 
-Since `pod` will always be generated using the pods structure we define `"forcePods": true` in the bluprint config.
+Since `pod` will always be generated using the pods structure we define `"forcePods": true` in the blueprint config.
 
-Before we can generate any of the compoents for the pod we will need to generate the pod. `bluprint generate pod todos`.
+Before we can generate any of the compoents for the pod we will need to generate the pod.
+
+`bluprint generate pod todos`
 
 Using the component blueprint from before we generate the three types of components in this example.
 
