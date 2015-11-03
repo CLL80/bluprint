@@ -23,7 +23,7 @@ String.prototype.camelize = function() {
   }).split(path.sep).join("");
 };
 
-String.prototype.uppercase = function() {
+String.prototype.upperCase = function() {
     return this.toUpperCase();
 };
 

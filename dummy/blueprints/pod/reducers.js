@@ -6,9 +6,9 @@ import shortid from 'shortid'
 import { actionTypes } from './constants'
 
 const {
-  ADD_<% TEMPLATE_TOKEN singular uppercase %>,
-  UPDATE_<% TEMPLATE_TOKEN singular uppercase %>,
-  DELETE_<% TEMPLATE_TOKEN singular uppercase %>,
+  ADD_<% TEMPLATE_TOKEN singular upperCase %>,
+  UPDATE_<% TEMPLATE_TOKEN singular upperCase %>,
+  DELETE_<% TEMPLATE_TOKEN singular upperCase %>,
 } = actionTypes;
 
 
@@ -20,13 +20,13 @@ const <% TEMPLATE_TOKEN %>Reducer = combineReducers({
 function entitiesReducer(state={}, action) {
   switch (action.type) {
 
-  case ADD_<% TEMPLATE_TOKEN singular uppercase %>:
+  case ADD_<% TEMPLATE_TOKEN singular upperCase %>:
     return add<% TEMPLATE_TOKEN singular capitalize %>(state, action.params);
 
-  case UPDATE_<% TEMPLATE_TOKEN singular uppercase %>:
+  case UPDATE_<% TEMPLATE_TOKEN singular upperCase %>:
     return update<% TEMPLATE_TOKEN singular capitalize %>(state, action.id, action.params);
 
-  case DELETE_<% TEMPLATE_TOKEN singular uppercase %>:
+  case DELETE_<% TEMPLATE_TOKEN singular upperCase %>:
     return delete<% TEMPLATE_TOKEN singular capitalize %>(state, action.id);
   }
 

@@ -1,1 +1,1 @@
-<% TEMPLATE_TOKEN singular uppercase %> test!!!
+<% TEMPLATE_TOKEN singular upperCase %> test!!!

@@ -86,7 +86,7 @@ export default class <% TEMPLATE_TOKEN titleCase %> extends Component {
 };
 ```
 
-To generate a Todo component blueprint run `bluprint generate component Todo`.
+To generate a Todo component run `bluprint generate component Todo`.
 
 Which will output
 
@@ -118,7 +118,7 @@ Need a pod example...
 
 ## Template Variables
 
-Right now only one template variable `TEMPLATE_TOKEN` is available.
+`TEMPLATE_TOKEN` is the only currently available template variable. I will add more as the need arises.
 
 ### Mutations
 

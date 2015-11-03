@@ -1,7 +1,7 @@
 'use strict'
 
 export const actionTypes = {
-  ADD_<% TEMPLATE_TOKEN singular uppercase %>: 'ADD_<% TEMPLATE_TOKEN singular uppercase %>',
-  UPDATE_<% TEMPLATE_TOKEN singular uppercase %>: 'UPDATE_<% TEMPLATE_TOKEN singular uppercase %>',
-  DELETE_<% TEMPLATE_TOKEN singular uppercase %>: 'DELETE_<% TEMPLATE_TOKEN singular uppercase %>',
+  ADD_<% TEMPLATE_TOKEN singular upperCase %>: 'ADD_<% TEMPLATE_TOKEN singular upperCase %>',
+  UPDATE_<% TEMPLATE_TOKEN singular upperCase %>: 'UPDATE_<% TEMPLATE_TOKEN singular upperCase %>',
+  DELETE_<% TEMPLATE_TOKEN singular upperCase %>: 'DELETE_<% TEMPLATE_TOKEN singular upperCase %>',
 }
