@@ -38,6 +38,9 @@ function copyFiles(blueprints, __destinationDirectory__, __templateDirectory__, 
 
   if (blueprint) {
     (function () {
+      // Prepare arguments for next recursion
+      var nextArgs = [blueprints, __destinationDirectory__, __templateDirectory__, __templateName__, callback, index + 1];
+
       // If a blueprint existes for the current index
       var fileName = __templateName__ ? __templateName__ + _path2['default'].extname(blueprint) : _path2['default'].basename(blueprint);
       var target = _path2['default'].join(__destinationDirectory__, fileName);
@@ -56,19 +59,19 @@ function copyFiles(blueprints, __destinationDirectory__, __templateDirectory__, 
             if (confirmed) {
               // If user confirms overwrite
               writeFromBlueprint(blueprint, target, handleTemplateVariables, function () {
-                return copyFiles(blueprints, __destinationDirectory__, __templateDirectory__, __templateName__, callback, index + 1);
+                return copyFiles.apply(undefined, nextArgs);
               });
             } else {
               // If user denies overwrite
               console.log('Skipping ' + target);
 
-              copyFiles(blueprints, __destinationDirectory__, __templateDirectory__, __templateName__, callback, index + 1);
+              copyFiles.apply(undefined, nextArgs);
             }
           });
         } else {
           // If no file at target exists
           writeFromBlueprint(blueprint, target, handleTemplateVariables, function () {
-            return copyFiles(blueprints, __destinationDirectory__, __templateDirectory__, __templateName__, callback, index + 1);
+            return copyFiles.apply(undefined, nextArgs);
           });
         }
       });
