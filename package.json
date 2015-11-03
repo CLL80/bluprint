@@ -27,6 +27,7 @@
     "lodash": "^3.10.1",
     "mkdirp": "^0.5.1",
     "path": "^0.12.7",
+    "promptly": "^0.2.1",
     "smart-stream": "^0.2.0"
   }
 }
