@@ -23,6 +23,18 @@ var _promptly = require('promptly');
 
 var _promptly2 = _interopRequireDefault(_promptly);
 
+var _chalk = require('chalk');
+
+var _chalk2 = _interopRequireDefault(_chalk);
+
+var _chip = require('chip');
+
+var _chip2 = _interopRequireDefault(_chip);
+
+var _colors = require('colors');
+
+var _colors2 = _interopRequireDefault(_colors);
+
 var _replaceTemplateVariables = require('./replace-template-variables');
 
 var _replaceTemplateVariables2 = _interopRequireDefault(_replaceTemplateVariables);
@@ -30,6 +42,8 @@ var _replaceTemplateVariables2 = _interopRequireDefault(_replaceTemplateVariable
 var _success = require('./success');
 
 var _success2 = _interopRequireDefault(_success);
+
+var log = (0, _chip2['default'])();
 
 function copyFiles(blueprints, __destinationDirectory__, __templateDirectory__, __templateName__, callback) {
   var index = arguments.length <= 5 || arguments[5] === undefined ? 0 : arguments[5];
@@ -44,13 +58,15 @@ function copyFiles(blueprints, __destinationDirectory__, __templateDirectory__, 
       // If a blueprint existes for the current index
       var fileName = __templateName__ ? __templateName__ + _path2['default'].extname(blueprint) : _path2['default'].basename(blueprint);
       var target = _path2['default'].join(__destinationDirectory__, fileName);
-
-      var handleTemplateVariables = new _smartStream2['default'].SmartStream('ReplaceTemplateVariables');
       var __templateToken__ = __templateName__ ? _path2['default'].parse(fileName).name : __templateDirectory__;
 
-      handleTemplateVariables.setMiddleware(function (data, middlewareCallback) {
-        return (0, _replaceTemplateVariables2['default'])(data, __templateToken__, middlewareCallback);
-      });
+      // Build template variable middleware
+      var handleTemplateVariables = buildTemplateVariablesMiddleware(new _smartStream2['default'].SmartStream('ReplaceTemplateVariables'), __templateToken__);
+
+      // Prepare arguments for writeFromBlueprint
+      var writeArgs = [blueprint, target, handleTemplateVariables, function () {
+        return copyFiles.apply(undefined, nextArgs);
+      }];
 
       _fs2['default'].stat(target, function (err, stat) {
         if (err == null) {
@@ -58,33 +74,34 @@ function copyFiles(blueprints, __destinationDirectory__, __templateDirectory__, 
           _promptly2['default'].confirm('Overwrite ' + target + '?', function (err, confirmed) {
             if (confirmed) {
               // If user confirms overwrite
-              writeFromBlueprint(blueprint, target, handleTemplateVariables, function () {
-                return copyFiles.apply(undefined, nextArgs);
-              });
+              writeFromBlueprint.apply(undefined, writeArgs);
             } else {
               // If user denies overwrite
               console.log('Skipping ' + target);
-
               copyFiles.apply(undefined, nextArgs);
             }
           });
         } else {
           // If no file at target exists
-          writeFromBlueprint(blueprint, target, handleTemplateVariables, function () {
-            return copyFiles.apply(undefined, nextArgs);
-          });
+          writeFromBlueprint.apply(undefined, writeArgs);
         }
       });
     })();
   } else {
-    // If no blueprint exists for the current index
+    // If no blueprint exists for the current index, the recursion ends
     callback();
   }
 }
 
 ;
 
-function writeFromBlueprint(blueprint, target, handleTemplateVariables, callback) {
+var buildTemplateVariablesMiddleware = function buildTemplateVariablesMiddleware(stream, __templateToken__) {
+  return stream.setMiddleware(function (data, callback) {
+    return (0, _replaceTemplateVariables2['default'])(data, __templateToken__, callback);
+  });
+};
+
+var writeFromBlueprint = function writeFromBlueprint(blueprint, target, handleTemplateVariables, callback) {
   var rd = _fs2['default'].createReadStream(blueprint, { encoding: 'utf8' });
   rd.on("error", function (err) {
     return error(err);
@@ -100,7 +117,7 @@ function writeFromBlueprint(blueprint, target, handleTemplateVariables, callback
   });
 
   rd.pipe(handleTemplateVariables).pipe(wr);
-}
+};
 
 var error = function error(err) {
   return log.error(err);

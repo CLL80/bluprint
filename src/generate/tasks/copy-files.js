@@ -3,8 +3,14 @@ import path from 'path';
 import ss from 'smart-stream';
 import promptly from 'promptly';
 
+import chalk from 'chalk';
+import chip from 'chip';
+import colors from 'colors';
+
 import replaceTemplateVariables from './replace-template-variables';
 import success from './success';
+
+const log = chip();
 
 export default function copyFiles(blueprints, __destinationDirectory__, __templateDirectory__, __templateName__, callback, index = 0) {
   const blueprint = blueprints[index];
@@ -25,13 +31,21 @@ export default function copyFiles(blueprints, __destinationDirectory__, __templa
         __templateName__ + path.extname(blueprint) :
         path.basename(blueprint);
     const target = path.join(__destinationDirectory__, fileName);
-
-    const handleTemplateVariables = new ss.SmartStream('ReplaceTemplateVariables');
     const __templateToken__ = __templateName__ ? path.parse(fileName).name : __templateDirectory__;
 
-    handleTemplateVariables.setMiddleware((data, middlewareCallback) =>
-      replaceTemplateVariables(data, __templateToken__, middlewareCallback)
+    // Build template variable middleware
+    const handleTemplateVariables = buildTemplateVariablesMiddleware(
+      new ss.SmartStream('ReplaceTemplateVariables'),
+      __templateToken__
     );
+
+    // Prepare arguments for writeFromBlueprint
+    const writeArgs = [
+      blueprint,
+      target,
+      handleTemplateVariables,
+      () => copyFiles(...nextArgs)
+    ];
 
     fs.stat(target, (err, stat) => {
       if (err == null) {
@@ -39,30 +53,31 @@ export default function copyFiles(blueprints, __destinationDirectory__, __templa
         promptly.confirm('Overwrite ' + target + '?', (err, confirmed) => {
           if (confirmed) {
             // If user confirms overwrite
-            writeFromBlueprint(blueprint, target, handleTemplateVariables, () =>
-              copyFiles(...nextArgs)
-            );
+            writeFromBlueprint(...writeArgs);
           } else {
             // If user denies overwrite
             console.log('Skipping ' + target);
-
             copyFiles(...nextArgs);
           }
         });
       } else {
         // If no file at target exists
-        writeFromBlueprint(blueprint, target, handleTemplateVariables, () =>
-          copyFiles(...nextArgs)
-        );
+        writeFromBlueprint(...writeArgs);
       }
     });
   } else {
-    // If no blueprint exists for the current index
+    // If no blueprint exists for the current index, the recursion ends
     callback();
   }
 };
 
-function writeFromBlueprint(blueprint, target, handleTemplateVariables, callback) {
+const buildTemplateVariablesMiddleware = (stream, __templateToken__) => {
+  return stream.setMiddleware((data, callback) =>
+    replaceTemplateVariables(data, __templateToken__, callback)
+  );
+}
+
+const writeFromBlueprint = (blueprint, target, handleTemplateVariables, callback) => {
   const rd = fs.createReadStream(blueprint, { encoding: 'utf8' });
   rd.on("error", err => error(err));
 
