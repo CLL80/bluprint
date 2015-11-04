@@ -22,23 +22,23 @@ var _copyFiles = require('./copy-files');
 var _copyFiles2 = _interopRequireDefault(_copyFiles);
 
 function buildBoilerplate(blueprints, __destinationDirectory__, __templateDirectory__, __templateName__) {
-  createDirectory(__destinationDirectory__, blueprints.root, function (files, __dir__) {
-    return (0, _copyFiles2['default'])(files, __dir__, __templateDirectory__, __templateName__);
+  createDirectory(__destinationDirectory__, blueprints.root, function (files, __dir__, subDirCallback) {
+    return (0, _copyFiles2['default'])(files, __dir__, __templateDirectory__, __templateName__, subDirCallback);
   });
 }
 
-function createDirectory(__dir__, dirObject, callback) {
+function createDirectory(__dir__, dirObject, copyFilesCallback) {
   (0, _mkdirp2['default'])(__dir__, {}, function () {
     // After the directory is created we callback to copy files
-    callback(dirObject.files, __dir__);
+    copyFilesCallback(dirObject.files, __dir__, function () {
+      // If has sub directories we need to create those too
+      var subDirectories = (0, _lodash.remove)(Object.keys(dirObject), function (n) {
+        return n !== 'files';
+      });
 
-    // If has sub directories we need to create those too
-    var subDirectories = (0, _lodash.remove)(Object.keys(dirObject), function (n) {
-      return n !== 'files';
-    });
-
-    subDirectories.forEach(function (key) {
-      return createDirectory(_path2['default'].join(__dir__, key), dirObject[key], callback);
+      subDirectories.forEach(function (key) {
+        return createDirectory(_path2['default'].join(__dir__, key), dirObject[key], copyFilesCallback);
+      });
     });
   });
 }

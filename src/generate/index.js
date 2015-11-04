@@ -70,7 +70,7 @@ export default function generate(args, podsFlag, globalConfigOptions) {
     const __logPath__ = usePods && __templateName__ ?
         `${__templateDirectory__} ${ __templateName__}` :
         __templateName__ || __templateDirectory__;
-    log('installing ' + chalk.white(`${__blueprintType__} ${__logPath__}`));
+    log('  installing ' + chalk.white(`${__blueprintType__} ${__logPath__}`));
 
     // Task flow
     serializeBlueprints(__blueprintRoot__, __blueprintType__, (blueprints) =>
