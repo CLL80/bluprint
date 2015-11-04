@@ -88,7 +88,7 @@ function generate(args, podsFlag, globalConfigOptions) {
     var __destinationDirectory__ = usePods && __templateName__ ? _path2['default'].join(__destinationRoot__, __templateDirectory__, __blueprintTypePlur__) : _path2['default'].join(__destinationRoot__, __templateDirectory__);
 
     var __logPath__ = usePods && __templateName__ ? __templateDirectory__ + ' ' + __templateName__ : __templateName__ || __templateDirectory__;
-    log('installing ' + _chalk2['default'].white(__blueprintType__ + ' ' + __logPath__));
+    log('  installing ' + _chalk2['default'].white(__blueprintType__ + ' ' + __logPath__));
 
     // Task flow
     (0, _tasksSerializeBlueprints2['default'])(__blueprintRoot__, __blueprintType__, function (blueprints) {

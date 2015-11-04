@@ -71,13 +71,13 @@ function copyFiles(blueprints, __destinationDirectory__, __templateDirectory__, 
       _fs2['default'].stat(target, function (err, stat) {
         if (err == null) {
           // If a file at target already exists
-          _promptly2['default'].confirm('Overwrite ' + target + '?', function (err, confirmed) {
+          _promptly2['default'].confirm('[' + _chalk2['default'].green('?') + '] ' + _chalk2['default'].red('Overwrite') + ' ' + target + ' (Yn)', function (err, confirmed) {
             if (confirmed) {
               // If user confirms overwrite
               writeFromBlueprint.apply(undefined, writeArgs);
             } else {
               // If user denies overwrite
-              console.log('Skipping ' + target);
+              log('  Skipping ' + _chalk2['default'].white(target));
               copyFiles.apply(undefined, nextArgs);
             }
           });

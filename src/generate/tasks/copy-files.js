@@ -50,13 +50,13 @@ export default function copyFiles(blueprints, __destinationDirectory__, __templa
     fs.stat(target, (err, stat) => {
       if (err == null) {
         // If a file at target already exists
-        promptly.confirm('Overwrite ' + target + '?', (err, confirmed) => {
+        promptly.confirm(`[${chalk.green('?')}] ${chalk.red('Overwrite')} ${target} (Yn)`, (err, confirmed) => {
           if (confirmed) {
             // If user confirms overwrite
             writeFromBlueprint(...writeArgs);
           } else {
             // If user denies overwrite
-            console.log('Skipping ' + target);
+            log(`  Skipping ${chalk.white(target)}`);
             copyFiles(...nextArgs);
           }
         });
