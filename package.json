@@ -1,6 +1,6 @@
 {
   "name": "bluprint",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "CLI app for easily creating and placing boilerplate code from predefined blueprints.",
   "main": "dist/index.js",
   "scripts": {
@@ -8,6 +8,10 @@
     "watch": "babel -w src --out-dir dist",
     "prepublish": "npm run build",
     "clear": "find ./dummy/app/ -mindepth 1 -maxdepth 1 -type d -exec rm -rf {} +"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/slightlytyler/bluprint.git"
   },
   "author": "Tyler Martinez",
   "license": "MIT",
