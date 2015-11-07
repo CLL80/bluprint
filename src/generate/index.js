@@ -6,7 +6,7 @@ import chalk from 'chalk';
 import chip from 'chip';
 import colors from 'colors';
 
-import readConfig from '../read-config';
+import readConfig from '../tasks/read-config';
 import serializeBlueprints from './tasks/serialize-blueprints';
 import buildBoilerplate from './tasks/build-boilerplate';
 

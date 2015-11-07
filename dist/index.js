@@ -19,14 +19,6 @@ var _helpersString = require('./helpers/String');
 
 var _helpersString2 = _interopRequireDefault(_helpersString);
 
-var _readConfig = require('./read-config');
-
-var _readConfig2 = _interopRequireDefault(_readConfig);
-
-var _globalConfigDefaults = require('./global-config-defaults');
-
-var _globalConfigDefaults2 = _interopRequireDefault(_globalConfigDefaults);
-
 var _help = require('./help');
 
 var _help2 = _interopRequireDefault(_help);
@@ -34,6 +26,14 @@ var _help2 = _interopRequireDefault(_help);
 var _generate = require('./generate');
 
 var _generate2 = _interopRequireDefault(_generate);
+
+var _tasksReadConfig = require('./tasks/read-config');
+
+var _tasksReadConfig2 = _interopRequireDefault(_tasksReadConfig);
+
+var _configGlobalDefaults = require('./config/global-defaults');
+
+var _configGlobalDefaults2 = _interopRequireDefault(_configGlobalDefaults);
 
 _commander2['default'].version('0.1.0').usage('<keywords> [options]').option('-p, --pod [pods flag]', 'Generates using the defined pods based file structure').option('--pods [pods flag alias]', 'Generates using the defined pods based file structure').on('--help', function () {
   return _help2['default'].print();
@@ -49,7 +49,7 @@ var anyArgs = function anyArgs() {
   return !!args.length;
 };
 
-(0, _readConfig2['default'])('./.bluprintconfig', function (configOptions) {
+(0, _tasksReadConfig2['default'])('./.bluprintconfig', function (configOptions) {
   if (!anyArgs()) {
     _commander2['default'].help();
   } else {
@@ -59,4 +59,4 @@ var anyArgs = function anyArgs() {
       _commander2['default'].help();
     }
   }
-}, _globalConfigDefaults2['default']);
+}, _configGlobalDefaults2['default']);

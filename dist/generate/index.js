@@ -23,9 +23,9 @@ var _colors = require('colors');
 
 var _colors2 = _interopRequireDefault(_colors);
 
-var _readConfig = require('../read-config');
+var _tasksReadConfig = require('../tasks/read-config');
 
-var _readConfig2 = _interopRequireDefault(_readConfig);
+var _tasksReadConfig2 = _interopRequireDefault(_tasksReadConfig);
 
 var _tasksSerializeBlueprints = require('./tasks/serialize-blueprints');
 
@@ -67,7 +67,7 @@ function generate(args, podsFlag, globalConfigOptions) {
   var __blueprintType__ = args[0];
   var __blueprintTypePlur__ = __blueprintType__.plural();
 
-  (0, _readConfig2['default'])(_path2['default'].join(__blueprintRoot__, __blueprintType__, 'config.json'), function (blueprintConfigOptions) {
+  (0, _tasksReadConfig2['default'])(_path2['default'].join(__blueprintRoot__, __blueprintType__, 'config.json'), function (blueprintConfigOptions) {
     var usePods = blueprintConfigOptions.forcePods || podsFlag;
 
     // Computed __destinationRoot__ using config

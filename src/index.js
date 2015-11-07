@@ -8,10 +8,10 @@ import { drop } from 'lodash';
 
 import String from './helpers/String';
 
-import readConfig from './read-config';
-import globalConfigDefaults from './global-config-defaults';
 import help from './help';
 import generate from './generate';
+import readConfig from './tasks/read-config';
+import globalConfigDefaults from './config/global-defaults';
 
 program
   .version('0.1.0')
