@@ -1,6 +1,6 @@
 {
   "name": "bluprint",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "CLI app for easily creating and placing boilerplate code from predefined blueprints.",
   "main": "dist/index.js",
   "scripts": {
