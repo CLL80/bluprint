@@ -15,6 +15,8 @@ var _path2 = _interopRequireDefault(_path);
 
 var _lodash = require('lodash');
 
+var _changeCase = require('change-case');
+
 var _inflection = require('inflection');
 
 var _inflection2 = _interopRequireDefault(_inflection);
@@ -35,25 +37,52 @@ var _generate = require('./generate');
 
 var _generate2 = _interopRequireDefault(_generate);
 
+String.prototype.upperCase = function () {
+  return (0, _changeCase.upperCase)(this);
+};
+
+String.prototype.lowerCase = function () {
+  return (0, _changeCase.lowerCase)(this);
+};
+
 String.prototype.capitalize = function () {
   return this.charAt(0).toUpperCase() + this.slice(1);
 };
 
-String.prototype.camelize = function () {
-  return this.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function (match, index) {
-    if (+match === 0) return ""; // or if (/\s+/.test(match)) for white spaces
-    return index == 0 ? match.toLowerCase() : match.toUpperCase();
-  }).split(_path2['default'].sep).join("");
-};
-
-String.prototype.upperCase = function () {
-  return this.toUpperCase();
+String.prototype.sentenceCase = function () {
+  return (0, _changeCase.sentenceCase)(this);
 };
 
 String.prototype.titleCase = function () {
-  return this.camelize().replace(/(^|\/)([a-z])/g, function (match) {
-    return match.toUpperCase();
-  });
+  return (0, _changeCase.titleCase)(this);
+};
+
+String.prototype.camelCase = function () {
+  return (0, _changeCase.camelCase)(this);
+};
+
+String.prototype.pascalCase = function () {
+  return (0, _changeCase.pascalCase)(this);
+};
+
+String.prototype.snakeCase = function () {
+  return (0, _changeCase.snakeCase)(this);
+};
+
+String.prototype.paramCase = function () {
+  return (0, _changeCase.paramCase)(this);
+};
+
+String.prototype.dotCase = function () {
+  return (0, _changeCase.dotCase)(this);
+};
+
+String.prototype.pathCase = function () {
+  return (0, _changeCase.pathCase)(this);
+};
+
+String.prototype.constantCase = function () {
+  return (0, _changeCase.upperCase)(this);
 };
 
 String.prototype.plural = function () {

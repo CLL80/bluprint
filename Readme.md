@@ -77,7 +77,7 @@ import {
   PropTypes
 } from 'react'
 
-export default class <% TEMPLATE_TOKEN titleCase %> extends Component {
+export default class <% TEMPLATE_TOKEN pascalCase %> extends Component {
   render() {
     return (
       <div></div>
@@ -85,7 +85,7 @@ export default class <% TEMPLATE_TOKEN titleCase %> extends Component {
   }
 }
 
-<% TEMPLATE_TOKEN titleCase %>.propTypes = {
+<% TEMPLATE_TOKEN pascalCase %>.propTypes = {
 
 };
 ```
@@ -195,12 +195,20 @@ Using the component blueprint from before we generate the three types of compone
 
 ### Mutations
 
-Several string mutations are available to help format the template variables. These can be applied as additional arguments in the template variables.
+Several string mutations are available to help format the template variables. These can be applied as additional arguments in the template variables. See [change-case repo](https://github.com/blakeembrey/change-case) for examples.
 
-- `capitalize`
-- `camelize`
-- `uppercase`
+- `upperCase`
+- `lowerCase`
+- `capialize`
+- `sentenceCase`
 - `titleCase`
+- `camelCase`
+- `pascalCase`
+- `snakeCase`
+- `paramCase`
+- `dotCase`
+- `pathCase`
+- `constantCase`
 - `plural`
 - `singular`
 

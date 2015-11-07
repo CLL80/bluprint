@@ -6,7 +6,7 @@ import {
   View,
 } from 'react-native'
 
-export default class <% TEMPLATE_TOKEN titleCase %> extends Component {
+export default class <% TEMPLATE_TOKEN pascalCase %> extends Component {
   shouldComponentUpdate = shouldPureComponentUpdate;
 
   render() {
@@ -17,6 +17,6 @@ export default class <% TEMPLATE_TOKEN titleCase %> extends Component {
   }
 }
 
-<% TEMPLATE_TOKEN titleCase %>.propTypes = {
+<% TEMPLATE_TOKEN pascalCase %>.propTypes = {
 
 };

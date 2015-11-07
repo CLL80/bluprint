@@ -5,7 +5,7 @@ import { bindActionCreators, compose } from 'redux'
 
 import shouldPureComponentUpdate from 'react-pure-render/function'
 
-import <% TEMPLATE_TOKEN titleCase %>Component from './component'
+import <% TEMPLATE_TOKEN pascalCase %>Component from './component'
 
 function mapStateToProps(state) {
   return {
@@ -27,4 +27,4 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps,
   mergeProps
-)(<% TEMPLATE_TOKEN titleCase %>Component);
+)(<% TEMPLATE_TOKEN pascalCase %>Component);
