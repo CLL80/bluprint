@@ -26,17 +26,14 @@ export default function copyFiles(blueprints, __destinationDirectory__, __templa
       index + 1
     ];
 
-    // If a blueprint existes for the current index
-    const fileName = __templateName__ ?
-        __templateName__ + path.extname(blueprint) :
-        path.basename(blueprint);
+    // If a blueprint exists for the current index
+    const fileName = path.basename(blueprint).replace('__TEMPLATE_TOKEN__', __templateName__);
     const target = path.join(__destinationDirectory__, fileName);
-    const __templateToken__ = __templateName__ ? path.parse(fileName).name : __templateDirectory__;
 
     // Build template variable middleware
     const handleTemplateVariables = buildTemplateVariablesMiddleware(
       new ss.SmartStream('ReplaceTemplateVariables'),
-      __templateToken__
+      __templateName__
     );
 
     // Prepare arguments for writeFromBlueprint
