@@ -21,6 +21,9 @@
   "devDependencies": {
     "babel": "^5.8.29"
   },
+  "publishConfig": {
+    "registry": "http://npm.lucianos.csb.pslgroup.com/"
+  },
   "bin": {
     "bluprint": "dist/index.js"
   },
