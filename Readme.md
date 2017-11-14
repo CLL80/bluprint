@@ -236,4 +236,42 @@ Global and per blueprint config options are available. Here they are shown with 
 ```
 
 ### Naming
-The `__TEMPLATE_TOKEN__` used for any file or directory within `/blueprints` will nbe replaced with the component name supplied via the command. This is useful if you have some files that should be generated that do not ytake the components name, e.g., `index.js`.
+The `__TEMPLATE_TOKEN__` used for any file or directory within `/blueprints` will be replaced with the component name supplied via the command. This is useful if you have some files that should be generated that do not ytake the components name, e.g., `index.js`.
+
+With this blueprint structure
+```
+project
+│   README.md
+│   .bluprintconfig
+│   package.json
+│
+├───app
+│   └── app.js
+│
+└───blueprints
+    │
+    └───class
+        │
+        └───__TEMPLATE_TOKEN__
+            │
+            │  __TEMPLATE_TOKEN.js
+            │  index.js
+
+```
+`bluprint generate class Newclass` will generate
+
+```
+project
+│   README.md
+│   .bluprintconfig
+│   package.json
+│
+└───app
+    ├── app.js
+    │
+    └───Newclass
+        │
+        │  Newclass.js
+        │  index.js
+
+```
