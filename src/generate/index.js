@@ -57,8 +57,10 @@ export default function generate(args, podsFlag, globalConfigOptions) {
     // This allows us to create typed folders inside pods directories
     // i.e. todos/components
     const __templateName__ = usePods ? args[2] : args[1];
-    const __templateDirectory__ = usePods ? args[1] : __blueprintTypePlur__;
-
+    let __templateDirectory__ = usePods ? args[1] : __blueprintTypePlur__;
+    if (globalConfigOptions.useTemplateDirectory === false) {
+      __templateDirectory__ = usePods ? args[1] : '';
+    }
 
     // Construct the destination directory
     // If using pods and supplied a template name we must include the typed

@@ -24,10 +24,10 @@ var _copyFiles2 = _interopRequireDefault(_copyFiles);
 function buildBoilerplate(blueprints, __destinationDirectory__, __templateDirectory__, __templateName__) {
   createDirectory(__destinationDirectory__, blueprints.root, function (files, __dir__, subDirCallback) {
     return (0, _copyFiles2['default'])(files, __dir__, __templateDirectory__, __templateName__, subDirCallback);
-  });
+  }, __templateName__);
 }
 
-function createDirectory(__dir__, dirObject, copyFilesCallback) {
+function createDirectory(__dir__, dirObject, copyFilesCallback, templateName) {
   (0, _mkdirp2['default'])(__dir__, {}, function () {
     // After the directory is created we callback to copy files
     copyFilesCallback(dirObject.files, __dir__, function () {
@@ -37,7 +37,7 @@ function createDirectory(__dir__, dirObject, copyFilesCallback) {
       });
 
       subDirectories.forEach(function (key) {
-        return createDirectory(_path2['default'].join(__dir__, key), dirObject[key], copyFilesCallback);
+        createDirectory(_path2['default'].join(__dir__, key === '__TEMPLATE_TOKEN__' && templateName ? templateName : key), dirObject[key], copyFilesCallback);
       });
     });
   });

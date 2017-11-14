@@ -1,5 +1,6 @@
 {
   "rootDirectory": "dummy/app",
   "podsDirectory": "pods",
-  "blueprintsDirectory": "dummy/blueprints"
+  "blueprintsDirectory": "dummy/blueprints",
+  "useTemplateDirectory": true
 }

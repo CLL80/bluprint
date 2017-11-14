@@ -120,7 +120,7 @@ Todo.propTypes = {
 };
 ```
 
-bluprint also allows generation of application structures utilizing pods. Here's an example strucuture we want to blueprint and generate.
+bluprint also allows generation of application structures utilizing pods. Here's an example structure we want to blueprint and generate.
 
 ```
 project
@@ -179,7 +179,7 @@ app
 
 Since `pod` will always be generated using the pods structure we define `"forcePods": true` in the blueprint config.
 
-Before we can generate any of the compoents for the pod we will need to generate the pod.
+Before we can generate any of the components for the pod we will need to generate the pod.
 
 `bluprint generate pod todos`
 
@@ -222,7 +222,8 @@ Global and per blueprint config options are available. Here they are shown with 
 {
   "rootDirectory": "app",
   "podsDirectory": "pods", // Assumed as a sub directory of root
-  "blueprintsDirectory": "blueprints"
+  "blueprintsDirectory": "blueprints",
+  "useTemplateDirectory": true // Should the components be generated in directory matching the template name?
 }
 ```
 
@@ -232,4 +233,45 @@ Global and per blueprint config options are available. Here they are shown with 
 {
   "forcePods": false
 }
+```
+
+### Naming
+The `__TEMPLATE_TOKEN__` used for any file or directory within `/blueprints` will be replaced with the component name supplied via the command. This is useful if you have some files that should be generated that do not ytake the components name, e.g., `index.js`.
+
+With this blueprint structure
+```
+project
+│   README.md
+│   .bluprintconfig
+│   package.json
+│
+├───app
+│   └── app.js
+│
+└───blueprints
+    │
+    └───class
+        │
+        └───__TEMPLATE_TOKEN__
+            │
+            │  __TEMPLATE_TOKEN.js
+            │  index.js
+
+```
+`bluprint generate class Newclass` will generate
+
+```
+project
+│   README.md
+│   .bluprintconfig
+│   package.json
+│
+└───app
+    ├── app.js
+    │
+    └───Newclass
+        │
+        │  Newclass.js
+        │  index.js
+
 ```

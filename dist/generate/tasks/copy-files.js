@@ -55,10 +55,10 @@ function copyFiles(blueprints, __destinationDirectory__, __templateDirectory__, 
       // Prepare arguments for next recursion
       var nextArgs = [blueprints, __destinationDirectory__, __templateDirectory__, __templateName__, callback, index + 1];
 
-      // If a blueprint existes for the current index
-      var fileName = __templateName__ ? __templateName__ + _path2['default'].extname(blueprint) : _path2['default'].basename(blueprint);
+      // If a blueprint exists for the current index
+      var __templateToken__ = __templateName__ ? __templateName__ : __templateDirectory__;
+      var fileName = _path2['default'].basename(blueprint).replace('__TEMPLATE_TOKEN__', __templateToken__);
       var target = _path2['default'].join(__destinationDirectory__, fileName);
-      var __templateToken__ = __templateName__ ? _path2['default'].parse(fileName).name : __templateDirectory__;
 
       // Build template variable middleware
       var handleTemplateVariables = buildTemplateVariablesMiddleware(new _smartStream2['default'].SmartStream('ReplaceTemplateVariables'), __templateToken__);
