@@ -56,11 +56,12 @@ function copyFiles(blueprints, __destinationDirectory__, __templateDirectory__, 
       var nextArgs = [blueprints, __destinationDirectory__, __templateDirectory__, __templateName__, callback, index + 1];
 
       // If a blueprint exists for the current index
-      var fileName = _path2['default'].basename(blueprint).replace('__TEMPLATE_TOKEN__', __templateName__);
+      var __templateToken__ = __templateName__ ? __templateName__ : __templateDirectory__;
+      var fileName = _path2['default'].basename(blueprint).replace('__TEMPLATE_TOKEN__', __templateToken__);
       var target = _path2['default'].join(__destinationDirectory__, fileName);
 
       // Build template variable middleware
-      var handleTemplateVariables = buildTemplateVariablesMiddleware(new _smartStream2['default'].SmartStream('ReplaceTemplateVariables'), __templateName__);
+      var handleTemplateVariables = buildTemplateVariablesMiddleware(new _smartStream2['default'].SmartStream('ReplaceTemplateVariables'), __templateToken__);
 
       // Prepare arguments for writeFromBlueprint
       var writeArgs = [blueprint, target, handleTemplateVariables, function () {

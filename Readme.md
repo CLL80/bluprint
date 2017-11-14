@@ -222,7 +222,8 @@ Global and per blueprint config options are available. Here they are shown with 
 {
   "rootDirectory": "app",
   "podsDirectory": "pods", // Assumed as a sub directory of root
-  "blueprintsDirectory": "blueprints"
+  "blueprintsDirectory": "blueprints",
+  "useTemplateDirectory": true // Should the components be generated in directory matching the template name?
 }
 ```
 
@@ -233,3 +234,6 @@ Global and per blueprint config options are available. Here they are shown with 
   "forcePods": false
 }
 ```
+
+### Naming
+The `__TEMPLATE_TOKEN__` used for any file or directory within `/blueprints` will nbe replaced with the component name supplied via the command. This is useful if you have some files that should be generated that do not ytake the components name, e.g., `index.js`.
