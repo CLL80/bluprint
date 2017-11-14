@@ -1,6 +1,6 @@
 {
   "name": "bluprint",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "CLI app for easily creating and placing boilerplate code from predefined blueprints.",
   "main": "dist/index.js",
   "scripts": {
@@ -14,6 +14,9 @@
     "url": "https://github.com/slightlytyler/bluprint.git"
   },
   "author": "Tyler Martinez",
+  "contributors": [
+    "Charles Lehnert"
+  ],
   "license": "MIT",
   "devDependencies": {
     "babel": "^5.8.29"

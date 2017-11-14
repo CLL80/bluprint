@@ -81,6 +81,9 @@ function generate(args, podsFlag, globalConfigOptions) {
     // i.e. todos/components
     var __templateName__ = usePods ? args[2] : args[1];
     var __templateDirectory__ = usePods ? args[1] : __blueprintTypePlur__;
+    if (globalConfigOptions.useTemplateDirectory === false) {
+      __templateDirectory__ = usePods ? args[1] : '';
+    }
 
     // Construct the destination directory
     // If using pods and supplied a template name we must include the typed
