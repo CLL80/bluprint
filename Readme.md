@@ -120,7 +120,7 @@ Todo.propTypes = {
 };
 ```
 
-bluprint also allows generation of application structures utilizing pods. Here's an example strucuture we want to blueprint and generate.
+bluprint also allows generation of application structures utilizing pods. Here's an example structure we want to blueprint and generate.
 
 ```
 project
@@ -179,7 +179,7 @@ app
 
 Since `pod` will always be generated using the pods structure we define `"forcePods": true` in the blueprint config.
 
-Before we can generate any of the compoents for the pod we will need to generate the pod.
+Before we can generate any of the components for the pod we will need to generate the pod.
 
 `bluprint generate pod todos`
 
